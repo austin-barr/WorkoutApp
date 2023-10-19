@@ -20,7 +20,24 @@ class LoginPage extends Component {
   handleLogin = () => {
     const { username, password } = this.state;
     
-   //POST TO LOGIN.php
+   //POST TO LOGIN.JS
+   try{
+    const response = fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({username, password}),
+    });
+    if (response.ok) {
+     console.log("Login Successful");
+        
+    }else{
+      console.log("Login Failed");
+    }
+    }catch(error){
+      console.log(error);
+    }
 
     console.log('Username:', username);
     console.log('Password:', password);
