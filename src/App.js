@@ -1,11 +1,10 @@
 import "./App.css";
 import LoginPage from "./components/LoginPage/LoginPage";
-// import SignUpPage from './SignUpPage';
+import SignUpPage from "./components/SignUpPage/SignUpPage";
 
 // App.js
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
-import SignUpPage from "./components/SignUpPage/SignUpPage";
 function App() {
   return (
     <div className="App">
