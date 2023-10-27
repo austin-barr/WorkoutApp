@@ -2,7 +2,8 @@
   border: solid red 1px;
 } */
 body {
-  background-size: cover;
+   background-image: url("../../static/huge.png");
+   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
   display: flex;
@@ -12,15 +13,10 @@ body {
   margin: 0;
 }
 
-.page-sup {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  /* background-image: url("../../static/huge.png"); */
-}
+.loginContainer {
+  /* background-image: url('../../static/barbell.png'); */
 
-.SignUpContainer {
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -38,10 +34,7 @@ label {
   display: none;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="date"] {
+input[type="text"]{
   width: 400px;
   padding: 8px;
   margin-top: 4px;
@@ -78,7 +71,7 @@ input.error {
 .UpperSignIn {
   text-align: center;
 }
-.LowerSignUp {
+.LowerLogin {
   text-align: center;
   font-size: 11px;
 }
