@@ -1,9 +1,9 @@
-// LoginPage.js
+// SettingsPage.js
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import "./LoginPage.css";
+import "./SettingsPage.css";
 // import SignUpPage from '../SignUpPage/SignUpPage';
-class LoginPage extends Component {
+class Settingspage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,11 +17,6 @@ class LoginPage extends Component {
     this.setState({
       [name]: value,
     });
-  };
-
-  handleSettings = () => {
-    <Link to="/SettingsPage"></Link>;
-    console.log("Settings Clicked");
   };
 
   handleLogin = () => {
@@ -54,7 +49,7 @@ class LoginPage extends Component {
       <div>
         <div class="loginContainer">
           <div class="UpperSignIn">
-            <h2>Big Fellas</h2>
+            <h2>Huge Fellas</h2>
             <p> You gonna sign in or just sit there? </p>
           </div>
           <div>
@@ -76,11 +71,10 @@ class LoginPage extends Component {
             />
           </div>
           <button onClick={this.handleLogin}>Login</button>
-          <button onClick={this.handleSettings}>Settings</button>
           <div class="LowerLogin">
             <p> Big Fellas Inc© </p>
             So You want to become a be fella? Click here to get{" "}
-            <Link to="SettingsPage"> Swole</Link>
+            <Link to="/SignUpPage"> Swole</Link>
           </div>
         </div>
       </div>
@@ -88,4 +82,4 @@ class LoginPage extends Component {
   }
 }
 
-export default LoginPage;
+export default Settingspage;

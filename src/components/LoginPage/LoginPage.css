@@ -1,5 +1,8 @@
+/* * {
+  border: solid red 1px;
+} */
 body {
-   /* background-image: url("../../static/barbell.png"); */
+   background-image: url("../../static/huge.png");
    background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;

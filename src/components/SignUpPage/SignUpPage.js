@@ -13,7 +13,7 @@ class SignUpPage extends Component {
   }
 
   handleInputChange = (event) => {
-    const { name, value, confirmPassword, phoneNumber, birthday, email } =
+    const { name, value} =
       event.target;
     this.setState({
       [name]: value,
@@ -30,14 +30,22 @@ class SignUpPage extends Component {
       email,
     } = this.state;
 
-    //POST TO SignUp.JS
+    //POST TO login.JS
     try {
-      const response = fetch("/api/SignUp", {
+      const response = fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({
+          username,
+          password,
+          confirmPassword,
+          phoneNumber,
+          birthday,
+          phoneNumber,
+          email,
+        }),
       });
       if (response.ok) {
         console.log("SignUp Successful");
@@ -52,8 +60,8 @@ class SignUpPage extends Component {
     console.log("Password:", password);
     console.log("confrim Password:", confirmPassword);
     console.log("Email:", email);
-    console.log("Phone Number:", toString());
-    console.log("birthday:", Date.toString(birthday));
+    console.log("Phone Number:", phoneNumber);
+    console.log("birthday:", birthday);
   };
 
   render() {
@@ -123,7 +131,7 @@ class SignUpPage extends Component {
           <div class="LowerSignUp">
             <p>
               {" "}
-              Already a new Big Fella? click here to prove your{" "}
+              Already a Big Fella? click here to prove your{" "}
               <Link to="/"> Swoleness</Link>{" "}
             </p>
             <p> Big Fellas Inc© </p>
