@@ -1,9 +1,10 @@
 // HomePage.js
-import React, { Component } from 'react';
-import { Line } from "react-chartjs-2";
-import Chart from 'chart.js/auto';
-import { startOfWeek, endOfWeek, format } from 'date-fns'
-import './HomePage.css'
+import React, { Component } from "react";
+import { startOfWeek, endOfWeek, format } from "date-fns";
+import home from "./HomePage.module.css"
+import WeightGraph from "./WeightGraph";
+import DurationGraph from "./DurationGraph";
+import UpdateWeightPopup from "./UpdateWeightPopup";
 
 class HomePage extends Component {
   constructor(props) {
@@ -15,10 +16,13 @@ class HomePage extends Component {
   }
 
   handleUpdateWeight = (event) => {
+    // show weight popup
     console.log("weight pressed")
+    return UpdateWeightPopup
   }
 
   handleLogWorkout = (event) => {
+    // handle redirect to progress page
     console.log("workout pressed")
   }
 
@@ -52,68 +56,13 @@ class HomePage extends Component {
   }
 
   getWeight = () => {
+    // get to api/home
     return "150 lbs"
   }
 
   getDuration = () => {
+    // get to api/home
     return "120 min"
-  }
-
-  getWeightGraph = () => {
-    let today = new Date()
-    let start = startOfWeek(today)
-    let end = endOfWeek(today)
-    // get weights from weight history
-    let weights = [150, 150, 151, 152]
-
-    const data = {
-      labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      datasets: [
-        {
-          id: 1,
-          label: 'Weight (lbs)',
-          data: weights,
-        },
-      ],
-    };
-    const options = {
-      scales: {
-        yAxis: {
-          min: Math.min(...weights) - 5,
-          max: Math.max(...weights) + 5,
-        }
-      },
-      responsive: true,
-      maintainAspectRatio: false
-    }
-    return <Line options={options} data={data} />
-  }
-
-  getDurationGraph = () => {
-    // get durations from weight history
-    let durations = [90, 0, 90, 60]
-
-    const data = {
-      labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      datasets: [
-        {
-          id: 1,
-          label: 'Time Spent (min)',
-          data: durations,
-        },
-      ],
-    };
-    const options = {
-      scales: {
-        yAxis: {
-          min: Math.max(Math.min(...durations) - 30, 0),
-          max: Math.max(...durations) + 30,
-        }
-      },
-      responsive: true,
-      maintainAspectRatio: false
-    }
-    return <Line options={options} data={data} />
   }
 
   render() {
@@ -126,40 +75,40 @@ class HomePage extends Component {
           <a href="/home/">Find a Workout</a>
           <a href="/home/">Settings</a>
         </nav>
-        <div id="grid-container">
-          <div id="left-panel">
+        <div id={home.gridContainer}>
+          <div id={home.leftPanel}>
             left
           </div>
-          <div id="header-container">
-            <h1 id="today-header">Today ({this.getDate()}):</h1>
+          <div id={home.headerContainer}>
+            <h1 id={home.todayHeader}>Today ({this.getDate()}):</h1>
           </div>
-          <div id="main-panel">
-            <div id="table-container">
-              <div id="weight-label" class="table-item">Weight:</div>
-              <div id="weight" class="table-item">{this.getWeight()}</div>
-              <div id="weight-button-container" class="table-item">
-                <button onClick={this.handleUpdateWeight} id="weight-button">Update Weight</button>
+          <div id={home.mainPanel}>
+            <div id={home.tableContainer}>
+              <div id={home.weightLabel} class={home.tableItem}>Weight:</div>
+              <div id={home.weight} class={home.tableItem}>{this.getWeight()}</div>
+              <div id={home.weightButtonContainer} class={home.tableItem}>
+                <UpdateWeightPopup />
               </div>
-              <div id="duration-label" class="table-item">Time Spent:</div>
-              <div id="duration" class="table-item">{this.getDuration()}</div>
-              <div id="workout-button-container" class="table-item">
-                <button onClick={this.handleLogWorkout} id="workout-button">Log a Workout</button>
+              <div id={home.durationLabel} class={home.tableItem}>Time Spent:</div>
+              <div id={home.duration} class={home.tableItem}>{this.getDuration()}</div>
+              <div id={home.workoutButtonContainer} class={home.tableItem}>
+                <button onClick={this.handleLogWorkout} id={home.workoutButton}>Log a Workout</button>
               </div>
             </div>
-            <h1 id="week-header">This week ({this.getWeek()}):</h1>
-            <div id="graphs-container">
-              <div id="weight-graph-container">
-                {this.getWeightGraph()}
+            <h1 id={home.weekHeader}>This week ({this.getWeek()}):</h1>
+            <div id={home.graphsContainer}>
+              <div id={home.weightGraphContainer}>
+                <WeightGraph />
               </div>
-              <div id="duration-graph-container">
-                {this.getDurationGraph()}
+              <div id={home.durationGraphContainer}>
+                <DurationGraph />
               </div>
             </div>
           </div>
-          <div id="sign-out-container">
-            <button onClick={this.handleSignOut} id="sign-out-button">Sign Out</button>
+          <div id={home.signOutContainer}>
+            <button onClick={this.handleSignOut} id={home.signOutButton}>Sign Out</button>
           </div>
-          <div id="right-panel">
+          <div id={home.rightPanel}>
             right
           </div>
         </div>

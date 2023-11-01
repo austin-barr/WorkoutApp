@@ -54,9 +54,7 @@ input[type="date"] {
 button:hover {
   background-color: light-blue;
 }
-div {
-  padding: 15px;
-}
+
 button {
   width: 100%;
   color: white;

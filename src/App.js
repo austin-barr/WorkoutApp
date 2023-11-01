@@ -2,7 +2,7 @@ import "./App.css";
 import LoginPage from "./components/LoginPage/LoginPage";
 import SignUpPage from "./components/SignUpPage/SignUpPage";
 import HomePage from "./components/HomePage/HomePage";
-import Settingspage from "./components/SettingsPage/SettingsPage";
+import SettingsPage from "./components/SettingsPage/SettingsPage";
 
 // App.js
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -15,7 +15,7 @@ function App() {
           <Route path="/" element={<LoginPage />} />
           <Route path="/SignUpPage" element={<SignUpPage />} />
           <Route path="/home/" element={<HomePage />} />
-          <Route path="/settingsPage" element={<SignUpPage />} />
+          <Route path="/SettingsPage" element={<SettingsPage />} />
         </Routes>
       </BrowserRouter>
     </div>

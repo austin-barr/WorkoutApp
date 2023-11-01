@@ -1,39 +1,4 @@
-nav, nav *, #grid-container, #grid-container *, #table-container, #table-container * {
-    outline-width: 1px;
-    outline-style: inset;
-    outline-color: black;
-}
-
-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 10%;
-    background-color: #555;
-    display: grid;
-    grid-template-columns: 20% 20% 20% 20% 20%;
-}
-
-nav a {
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-nav a:hover {
-    background-color: #222;
-}
-
-.active {
-    background-color: #333;
-}
-
-#grid-container {
+#gridContainer {
     display: grid;
     grid-template-columns: 20% 60% 20%;
     grid-template-rows: 10% 80% 10%;
@@ -47,12 +12,12 @@ nav a:hover {
     background-color: rgba(97, 97, 113, 0.626);
 }
 
-#left-panel {
+#leftPanel {
     grid-column: 1;
     grid-row: 2;
 }
 
-#header-container {
+#headerContainer {
     grid-column: 2;
     grid-row: 1;
     display: flex;
@@ -60,24 +25,24 @@ nav a:hover {
     align-items: center;
 }
 
-#today-header {
+#todayHeader {
     text-align: center;
     text-wrap: nowrap;
     font-size: 4.5vh;
 }
 
-#main-panel {
+#mainPanel {
     grid-column: 2;
     grid-row: 2;
     padding: 0;
 }
 
-#right-panel {
+#rightPanel {
     grid-column: 3;
     grid-row: 2;
 }
 
-#sign-out-container {
+#signOutContainer {
     grid-column: 3;
     grid-row: 1;
     display: flex;
@@ -85,7 +50,7 @@ nav a:hover {
     align-items: center;
 }
 
-#sign-out-button {
+#signOutButton {
     background-color: red;
     margin: 0;
     padding: 0;
@@ -94,22 +59,20 @@ nav a:hover {
     font-size: 2vh;
 }
 
-#sign-out-button:hover {
+#signOutButton:hover {
     background-color: rgb(200, 0, 0);
 }
 
-#table-container {
+#tableContainer {
     display: grid;
     grid-template-columns: 35% 25% 40%;
     border: 2px solid;
-    column-gap: 2px;
-    row-gap: 2px;
     margin: 0;
     padding: 0;
     background-color: black;
 }
 
-.table-item {
+.tableItem {
     padding: 5px;
     display: flex;
     align-items: center;
@@ -118,27 +81,32 @@ nav a:hover {
     background-color: #777;
 }
 
-#weight-label, #duration-label {
+#weightLabel, #durationLabel {
     justify-content: right;
+}
+
+#weightLabel, #weight, #weightButtonContainer {
+    margin-bottom: 2px;
 }
 
 #weight, #duration {
     justify-content: left;
 }
 
-#weight-button-container, #workout-button-container {
+#weightButtonContainer, #workoutButtonContainer {
     justify-content: center;
+    margin-left: 2px;
 }
 
-#weight-button, #workout-button {
+#weightButton, #workoutButton {
     background-color: black;
     font-size: 3vh;
     margin: 0;
     padding: 10px;
-    text-wrap: no-wrap;
+    width: 90%;
 }
 
-#week-header {
+#weekHeader {
     text-align: center;
     text-wrap: nowrap;
     font-size: 4.5vh;
@@ -146,12 +114,12 @@ nav a:hover {
     margin: 0;
 }
 
-#graphs-container {
+#graphsContainer {
     padding: 0;
     margin: 0;
 }
 
-#weight-graph-container, #duration-graph-container {
+#weightGraphContainer, #durationGraphContainer {
     background-color: rgb(31, 36, 47);
     height: 180px;
     padding: 0;

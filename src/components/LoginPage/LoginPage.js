@@ -1,8 +1,8 @@
 // LoginPage.js
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import "./LoginPage.css";
-// import SignUpPage from '../SignUpPage/SignUpPage';
+import login from "./LoginPage.module.css";
+import SignUpPage from '../SignUpPage/SignUpPage';
 class LoginPage extends Component {
   constructor(props) {
     super(props);
@@ -51,7 +51,7 @@ class LoginPage extends Component {
 
   render() {
     return (
-      <div>
+      <div class={login.body}>
         <div class="loginContainer">
           <div class="UpperSignIn">
             <h2>Big Fellas</h2>
@@ -79,8 +79,8 @@ class LoginPage extends Component {
           <button onClick={this.handleSettings}>Settings</button>
           <div class="LowerLogin">
             <p> Big Fellas Inc© </p>
-            So You want to become a be fella? Click here to get{" "}
-            <Link to="SettingsPage"> Swole</Link>
+            So You want to become a big fella? Click here to get{" "}
+            <Link to="SignUpPage"> Swole</Link>
           </div>
         </div>
       </div>

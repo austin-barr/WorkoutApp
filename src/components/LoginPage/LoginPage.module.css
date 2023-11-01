@@ -1,16 +1,16 @@
 /* * {
   border: solid red 1px;
 } */
-body {
-   background-image: url("../../static/huge.png");
-   background-size: cover;
+.body {
+  background-image: url("../../static/huge.png");
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin: 0;
+  width: 100vw;
 }
 
 .loginContainer {
@@ -49,9 +49,7 @@ input[type="password"] {
 button:hover {
   background-color: light-blue;
 }
-div {
-  padding: 15px;
-}
+
 button {
   width: 100%;
   color: white;
