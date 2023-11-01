@@ -1,35 +1,23 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const router = express.Router();
+const { check, validationResult } = require('express-validator');
 const mysql = require('mysql2/promise');
 const jwt = require('jsonwebtoken');
-const cors = require('cors');
 const bcrypt = require('bcrypt');
-const app = express();
-const port = 3001;
 
-// Middleware to parse JSON request bodies
-app.use(bodyParser.json());
-
-// Define CORS options
-const corsOptions = {
-  origin: 'http://192.168.57.6:3000', // Allow requests from this origin
+const dbConfig = {
+  host: '127.0.0.1',
+  user: 'root',
+  password: 'root',
+  database: 'FitnessApp',
 };
 
-// Enable CORS with options
-app.use(cors(corsOptions));
-
-
-//Input sanitation
-const { check, validationResult } = require('express-validator');
-
-// Route for handling the login request
-app.post('/api/login', [
-
+router.post('/login', [
   check('username').notEmpty().isString().trim(),
   check('password').notEmpty().isString().trim(),
 ], async (req, res) => {
   const errors = validationResult(req);
-
+  console.log("login hit");
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
@@ -71,7 +59,5 @@ app.post('/api/login', [
   }
 });
 
-// Listen to api requests sent to http://192.168.57.6:3000/api/login
-app.listen(port, '192.168.57.6', () => {
-  console.log(`Server listening on http://192.168.57.6:${port}`);
-});
+module.exports = router;
+

@@ -5,15 +5,17 @@ import { Link } from 'react-router-dom';
 import './bootstrap.css';
 import axios from 'axios';
 
-function LoginPage() {
+function SignUpPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
+  const [confirmPassword, setConfirm] = useState('');
+  const [phoneNumber, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://192.168.57.6:3001/api/login', { username, password });
+      const response = await axios.post('http://192.168.57.6:3001/api/signup', { username, password, confirmPassword, phoneNumber, email  });
       localStorage.setItem('token', response.data.token);
       // Redirect to protected route
     } catch (err) {
