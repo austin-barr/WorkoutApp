@@ -20,7 +20,7 @@ class LoginPage extends Component {
   };
 
   handleSettings = () => {
-    <Link to="/SettingsPage"></Link>;
+    window.location.href = "/SettingsPage";
     console.log("Settings Clicked");
   };
 
