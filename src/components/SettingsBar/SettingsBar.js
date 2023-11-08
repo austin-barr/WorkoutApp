@@ -6,6 +6,12 @@ import Container from "react-bootstrap/Container";
 // import Navbar from 'react-bootstrap/Navbar';
 
 function Navbar() {
+  // handleSignOut = (event) => {
+  //   // handle signing out, send something to backend?
+
+  //   window.location = "/";
+  // };
+
   const location = useLocation(); // once ready it returns the 'window.location' object
   const [url, setUrl] = useState(null);
   useEffect(() => {
@@ -14,10 +20,32 @@ function Navbar() {
   const [isActive, setIsActive] = useState(false);
   return (
     <nav class="vertical-menu" className="h-auto" style={{ Height: "5px" }}>
-      <Link to="/" className={"underline" + (url === "/" ?" active" : "")}>LoginTest</Link>
-      <Link to="/SignUpPage" className={"underline" + (url === "/SignUpPage" ?" active" : "")}>SignUp</Link>
-      <Link to="/SettingsPage" className={"underline" + (url === "/SettingsPage" ?" active" : "")}>Settings</Link>
-      <Link to="/HomePage" className={"underline" + (url === "/HomePage" ?" active" : "")}>Home</Link>
+      <Link to="/" className={"underline" + (url === "/" ? " active" : "")}>
+        LoginTest
+      </Link>
+      <Link
+        to="/SignUpPage"
+        className={"underline" + (url === "/SignUpPage" ? " active" : "")}
+      >
+        SignUp
+      </Link>
+      <Link
+        to="/SettingsPage"
+        className={"underline" + (url === "/SettingsPage" ? " active" : "")}
+      >
+        Settings
+      </Link>
+      <Link
+        to="/HomePage"
+        className={"underline" + (url === "/HomePage" ? " active" : "")}
+      >
+        Home
+      </Link>
+      <Navbar.Form className="d-flex justify-content-center align-items-center w-auto p-3">
+        <button  id="sign-out-button">
+          Sign Out
+        </button>
+      </Navbar.Form>
       {/* <NavLink to="/SignUpPage"className={"underline" + isActive?" active" : ""}>SignUp</NavLink>
       <NavLink to="/SettingsPage"className={"underline" + isActive?" active" : ""}>Settings</NavLink> */}
       {/* <a href="/SettingsPage">SettingsPage</a>
