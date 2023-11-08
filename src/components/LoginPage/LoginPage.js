@@ -1,91 +1,49 @@
 // LoginPage.js
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import "./LoginPage.css";
-// import SignUpPage from '../SignUpPage/SignUpPage';
-class LoginPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: "",
-      password: "",
-    };
-  }
 
-  handleInputChange = (event) => {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value,
-    });
-  };
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import '../../bootstrap.css';
+import axios from 'axios';
 
-  handleSettings = () => {
-    <Link to="/SettingsPage"></Link>;
-    console.log("Settings Clicked");
-  };
+function LoginPage() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  handleLogin = () => {
-    const { username, password } = this.state;
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    //POST TO LOGIN.JS
     try {
-      const response = fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-      if (response.ok) {
-        console.log("Login Successful");
-      } else {
-        console.log("Login Failed");
-      }
-    } catch (error) {
-      console.log(error);
+      const response = await axios.post('/api/login', { username, password });
+      localStorage.setItem('token', response.data.token);
+      // Redirect to protected route
+    } catch (err) {
+      console.error(err);
     }
-
-    console.log("Username:", username);
-    console.log("Password:", password);
   };
 
-  render() {
-    return (
-      <div>
-        <div class="loginContainer">
-          <div class="UpperSignIn">
-            <h2>Big Fellas</h2>
-            <p> You gonna sign in or just sit there? </p>
-          </div>
-          <div>
-            <label>Username:</label>
-            <input
-              type="text"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div>
-            <label>Password:</label>
-            <input
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <button onClick={this.handleLogin}>Login</button>
-          <button onClick={this.handleSettings}>Settings</button>
-          <div class="LowerLogin">
-            <p> Big Fellas Inc© </p>
-            So You want to become a be fella? Click here to get{" "}
-            <Link to="SettingsPage"> Swole</Link>
-          </div>
-        </div>
+  return (
+    <div className="d-flex justify-content-center align-items-center" >
+    <form onSubmit={handleSubmit} className="col-md-5" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
+    <h1>Big Fellas</h1>
+    <div className="p-4">
+      <div className="form-group">
+        <label class = "text-primary">Username:</label>
+        <input type="text" className="form-control" id="username" value={username} onChange={(event) => setUsername(event.target.value)} />
       </div>
-    );
-  }
+      <div className="form-group">
+        <label class = "text-primary">Password:</label>
+        <input type="password" className="form-control" id="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+      </div>
+      <p></p>
+      <button type="submit" className="btn btn-primary">Login</button>
+      <div style={{ marginTop: '10px' }}>
+        <Link to="/register">New user? Click here</Link>
+      </div>
+      </div>
+    </form>
+  </div>
+);
 }
-
 export default LoginPage;
+
+

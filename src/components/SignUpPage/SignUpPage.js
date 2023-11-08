@@ -1,145 +1,69 @@
-// SignUpPage.js
-import photo from "../../static/huge.png";
-import React, { Component } from "react";
-import "./SignUpPage.css";
-import { Link } from "react-router-dom";
-class SignUpPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: "",
-      password: "",
-    };
-  }
+// LoginPage.js
 
-  handleInputChange = (event) => {
-    const { name, value} =
-      event.target;
-    this.setState({
-      [name]: value,
-    });
-  };
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import '../../bootstrap.css';
+import axios from 'axios';
 
-  handleSignUp = () => {
-    const {
-      username,
-      password,
-      confirmPassword,
-      phoneNumber,
-      birthday,
-      email,
-    } = this.state;
+function LoginPage() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [phoneNumber, setPhone] = useState('');
+  const [birthday, setBirthday] = useState('');
+  const [email, setEmail] = useState('');
 
-    //POST TO login.JS
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
     try {
-      const response = fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-          confirmPassword,
-          phoneNumber,
-          birthday,
-          phoneNumber,
-          email,
-        }),
-      });
-      if (response.ok) {
-        console.log("SignUp Successful");
-      } else {
-        console.log("SignUp Failed");
-      }
-    } catch (error) {
-      console.log(error);
+      const response = await axios.post('http://192.168.57.6:3001/api/signup', { username, password });
+      localStorage.setItem('token', response.data.token);
+      // Redirect to protected route
+    } catch (err) {
+      console.error(err);
     }
-
-    console.log("Username:", username);
-    console.log("Password:", password);
-    console.log("confrim Password:", confirmPassword);
-    console.log("Email:", email);
-    console.log("Phone Number:", phoneNumber);
-    console.log("birthday:", birthday);
   };
 
-  render() {
-    return (
-      <div class="page-sup">
-        {/* call an image */}
-        <div class="SignUpContainer">
-          <div class="UpperSignIn">
-            <h2>So, you wanna become a Big Fella©</h2>
-            <p> You better not be slacking, SIGN UP NOW! </p>
-          </div>
-          <div>
-            <label>Username:</label>
-            <input
-              type="text"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div>
-            <label>Password:</label>
-            <input
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div>
-            <label> Confirm Password:</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={this.state.confrimPassword}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              name="email"
-              value={this.state.email}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div>
-            <label>Phone Number:</label>
-            <input
-              type="text"
-              name="PhoneNumber"
-              value={this.state.phoneNumber}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div>
-            <label>Birthday:</label>
-            <input
-              type="date"
-              name="Birthday"
-              value={this.state.birthday}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <button onClick={this.handleSignUp}>SignUp</button>
-          <div class="LowerSignUp">
-            <p>
-              {" "}
-              Already a Big Fella? click here to prove your{" "}
-              <Link to="/"> Swoleness</Link>{" "}
-            </p>
-            <p> Big Fellas Inc© </p>
-          </div>
-        </div>
+  return (
+    <div className="d-flex justify-content-center align-items-center" >
+    <form onSubmit={handleSubmit} className="col-md-5" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
+    <h1>Big Fellas</h1>
+    <div className="p-4">
+      <div className="form-group">
+        <label class = "text-primary">Username:</label>
+        <input type="text" className="form-control" id="username" value={username} onChange={(event) => setUsername(event.target.value)} />
       </div>
-    );
-  }
+      <div className="form-group">
+        <label class = "text-primary">Password:</label>
+        <input type="password" className="form-control" id="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+      </div>
+      <div className="form-group">
+        <label class = "text-primary">Confirm Password:</label>
+        <input type="password" className="form-control" id="confirm" value={confirm} onChange={(event) => setConfirm(event.target.value)} />
+      </div>
+      <div className="form-group">
+        <label class = "text-primary">Phone Number:</label>
+        <input type="text" className="form-control" id="PhoneNumber" value={phoneNumber} onChange={(event) => setPhone(event.target.value)} />
+      </div>
+      <div className="form-group">
+        <label class = "text-primary">Birthday:</label>
+        <input type="text" className="form-control" id="birthday" value={birthday} onChange={(event) => setBirthday(event.target.value)} />
+      </div>
+      <div className="form-group">
+        <label class = "text-primary">Email:</label>
+        <input type="text" className="form-control" id="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+      </div>
+      <p></p>
+      <button type="submit" className="btn btn-primary">Login</button>
+      <div style={{ marginTop: '10px' }}>
+        <Link to="/">Wanna go home? Click here</Link>
+      </div>
+      </div>
+    </form>
+  </div>
+);
 }
+export default LoginPage;
 
-export default SignUpPage;
+

@@ -1,65 +1,57 @@
-// HomePage.js
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Line } from "react-chartjs-2";
 import Chart from 'chart.js/auto';
 import { startOfWeek, endOfWeek, format } from 'date-fns'
 import './HomePage.css'
 
-class HomePage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: '',
-      password: '',
-    };
+function HomePage() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleUpdateWeight = (event) => {
+    console.log("weight pressed");
   }
 
-  handleUpdateWeight = (event) => {
-    console.log("weight pressed")
+  const handleLogWorkout = (event) => {
+    console.log("workout pressed");
   }
 
-  handleLogWorkout = (event) => {
-    console.log("workout pressed")
-  }
-
-  handleSignOut = (event) => {
-
+  const handleSignOut = (event) => {
     // handle signing out, send something to backend?
-
     window.location = "/";
   }
 
-  formatDate(date) {
+  const formatDate = (date) => {
     let dd = String(date.getDate()).padStart(2, '0');
     let mm = String(date.getMonth() + 1).padStart(2, '0');
     let yy = String(date.getFullYear()).slice(-2);
 
     let fDate = mm + '/' + dd + '/' + yy;
-    return fDate
+    return fDate;
   }
 
-  getDate = (date) => {
+  const getDate = (date) => {
     let today = new Date();
-    return this.formatDate(today)
+    return formatDate(today);
   }
 
-  getWeek = () => {
+  const getWeek = () => {
     let today = new Date()
     let start = startOfWeek(today)
     let end = endOfWeek(today)
-    
-    return this.formatDate(start) + " - " + this.formatDate(end)
+
+    return formatDate(start) + " - " + formatDate(end);
   }
 
-  getWeight = () => {
-    return "150 lbs"
+  const getWeight = () => {
+    return "150 lbs";
   }
 
-  getDuration = () => {
-    return "120 min"
+  const getDuration = () => {
+    return "120 min";
   }
 
-  getWeightGraph = () => {
+  const getWeightGraph = () => {
     let today = new Date()
     let start = startOfWeek(today)
     let end = endOfWeek(today)
@@ -85,11 +77,11 @@ class HomePage extends Component {
       },
       responsive: true,
       maintainAspectRatio: false
-    }
-    return <Line options={options} data={data} />
+    };
+    return <Line options={options} data={data} />;
   }
 
-  getDurationGraph = () => {
+  const getDurationGraph = () => {
     // get durations from weight history
     let durations = [90, 0, 90, 60]
 
@@ -112,60 +104,58 @@ class HomePage extends Component {
       },
       responsive: true,
       maintainAspectRatio: false
-    }
-    return <Line options={options} data={data} />
+    };
+    return <Line options={options} data={data} />;
   }
 
-  render() {
-    return (
-      <div>
-        <nav>
-          <a href="/home/" class="active">Home</a>
-          <a href="/home/">My Progress</a>
-          <a href="/home/">My Workouts</a>
-          <a href="/home/">Find a Workout</a>
-          <a href="/home/">Settings</a>
-        </nav>
-        <div id="grid-container">
-          <div id="left-panel">
-            left
-          </div>
-          <div id="header-container">
-            <h1 id="today-header">Today ({this.getDate()}):</h1>
-          </div>
-          <div id="main-panel">
-            <div id="table-container">
-              <div id="weight-label" class="table-item">Weight:</div>
-              <div id="weight" class="table-item">{this.getWeight()}</div>
-              <div id="weight-button-container" class="table-item">
-                <button onClick={this.handleUpdateWeight} id="weight-button">Update Weight</button>
-              </div>
-              <div id="duration-label" class="table-item">Time Spent:</div>
-              <div id="duration" class="table-item">{this.getDuration()}</div>
-              <div id="workout-button-container" class="table-item">
-                <button onClick={this.handleLogWorkout} id="workout-button">Log a Workout</button>
-              </div>
+  return (
+    <div>
+      <nav>
+        <a href="/home/" className="active">Home</a>
+        <a href="/home/">My Progress</a>
+        <a href="/home/">My Workouts</a>
+        <a href="/home/">Find a Workout</a>
+        <a href="/home/">Settings</a>
+      </nav>
+      <div id="grid-container">
+        <div id="left-panel">
+          left
+        </div>
+        <div id="header-container">
+          <h1 id="today-header">Today ({getDate()}):</h1>
+        </div>
+        <div id="main-panel">
+          <div id="table-container">
+            <div id="weight-label" className="table-item">Weight:</div>
+            <div id="weight" className="table-item">{getWeight()}</div>
+            <div id="weight-button-container" className="table-item">
+              <button onClick={handleUpdateWeight} id="weight-button">Update Weight</button>
             </div>
-            <h1 id="week-header">This week ({this.getWeek()}):</h1>
-            <div id="graphs-container">
-              <div id="weight-graph-container">
-                {this.getWeightGraph()}
-              </div>
-              <div id="duration-graph-container">
-                {this.getDurationGraph()}
-              </div>
+            <div id="duration-label" className="table-item">Time Spent:</div>
+            <div id="duration" className="table-item">{getDuration()}</div>
+            <div id="workout-button-container" className="table-item">
+              <button onClick={handleLogWorkout} id="workout-button">Log a Workout</button>
             </div>
           </div>
-          <div id="sign-out-container">
-            <button onClick={this.handleSignOut} id="sign-out-button">Sign Out</button>
-          </div>
-          <div id="right-panel">
-            right
+          <h1 id="week-header">This week ({getWeek()}):</h1>
+          <div id="graphs-container">
+            <div id="weight-graph-container">
+              {getWeightGraph()}
+            </div>
+            <div id="duration-graph-container">
+              {getDurationGraph()}
+            </div>
           </div>
         </div>
+        <div id="sign-out-container">
+          <button onClick={handleSignOut} id="sign-out-button">Sign Out</button>
+        </div>
+        <div id="right-panel">
+          right
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default HomePage;
