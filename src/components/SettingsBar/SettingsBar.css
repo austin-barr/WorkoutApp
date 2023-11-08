@@ -27,6 +27,10 @@ nav a:hover {
   background-color: #222;
 } 
 
+.color{
+  background-color: red
+}
+
 /* vertical-menu {
   width: 200px;
 }

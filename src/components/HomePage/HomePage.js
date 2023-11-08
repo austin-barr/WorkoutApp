@@ -8,13 +8,13 @@ import "../bootstrap.css";
 import Navbar from "../SettingsBar/SettingsBar";
 
 class HomePage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: "",
-      password: "",
-    };
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     username: "",
+  //     password: "",
+  //   };
+  // }
 
   handleUpdateWeight = (event) => {
     console.log("weight pressed");
@@ -74,6 +74,8 @@ class HomePage extends Component {
           id: 1,
           label: "Weight (lbs)",
           data: weights,
+          borderColor: 'rgb(0, 0, 0)',
+          backgroundColor: 'rgba(0, 0, 0, 1)'
         },
       ],
     };
@@ -101,6 +103,8 @@ class HomePage extends Component {
           id: 1,
           label: "Time Spent (min)",
           data: durations,
+          borderColor: 'rgb(0, 0, 0)',
+          backgroundColor: 'rgba(0, 0, 0, 1)'
         },
       ],
     };
@@ -119,7 +123,7 @@ class HomePage extends Component {
 
   render() {
     return (
-      <div>
+      <div className="d-flex justify-content-center align-items-center w-auto p-3">
         <Navbar />a{" "}
         {/* <nav>
           <a href="/home/" class="active">Home</a>
@@ -128,51 +132,70 @@ class HomePage extends Component {
           <a href="/home/">Find a Workout</a>
           <a href="/home/">Settings</a>
         </nav> */}
-        <div id="grid-container" className="p4" data-bs-theme="dark">
-          <div id="left-panel">left</div>
-          <div id="header-container">
-            <h1 id="today-header" className="h-100 d-inline-block">
-              Today ({this.getDate()}):
-            </h1>
-          </div>
-          <div id="main-panel">
-            <div id="table-container">
-              <div id="weight-label" class="table-item">
-                Weight:
+        <form
+          className="h-100 d-flex flex-column justify-content-center align-items-center"
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            padding: "5px",
+          }}
+        >
+          <div id="grid-container" className="p4" data-bs-theme="dark">
+            <div id="header-container ">
+              <h1 id="today-header" className="h-100 d-inline-block">
+                Today ({this.getDate()}):
+              </h1>
+            </div>
+            <div id="main-panel">
+              <div id="table-container">
+                <label class="text-primary">Weight:</label>
+                <input
+                  className="form-control"
+                  id="weight"
+                  style={{ color: "black" }}
+                />
+                <div id="weight-button-container" class="table-item">
+                  <button
+                    onClick={this.handleUpdateWeight}
+                    id="weight-button"
+                    className="btn btn-primary"
+                  >
+                    Update Weight
+                  </button>
+                </div>
+                <label class="text-primary">Duration:</label>
+                <input
+                  className="form-control"
+                  id="duration"
+                  style={{ color: "black" }}
+                />
+                {/* <div id="duration" class="table-item">
+                  {this.getDuration()}
+                </div> */}
+                <div id="workout-button-container" class="table-item">
+                  <button
+                    onClick={this.handleLogWorkout}
+                    id="workout-button"
+                    className="btn btn-primary"
+                  >
+                    Log a Workout
+                  </button>
+                </div>
               </div>
-              <div id="weight" class="table-item">
-                {this.getWeight()}
-              </div>
-              <div id="weight-button-container" class="table-item">
-                <button onClick={this.handleUpdateWeight} id="weight-button">
-                  Update Weight
-                </button>
-              </div>
-              <div id="duration-label" class="table-item">
-                Time Spent:
-              </div>
-              <div id="duration" class="table-item">
-                {this.getDuration()}
-              </div>
-              <div id="workout-button-container" class="table-item">
-                <button onClick={this.handleLogWorkout} id="workout-button">
-                  Log a Workout
-                </button>
+              <h1 id="week-header">This week ({this.getWeek()}):</h1>
+              <div id="graphs-container">
+                <div id="weight-graph-container">{this.getWeightGraph()}</div>
+                <div id="duration-graph-container">
+                  {this.getDurationGraph()}
+                </div>
               </div>
             </div>
-            <h1 id="week-header">This week ({this.getWeek()}):</h1>
-            <div id="graphs-container">
-              <div id="weight-graph-container">{this.getWeightGraph()}</div>
-              <div id="duration-graph-container">{this.getDurationGraph()}</div>
-            </div>
+            {/* <div id="sign-out-container">
+              <button onClick={this.handleSignOut} id="sign-out-button" className="btn btn-secondary">
+                Sign Out
+              </button> */}
+            {/* </div> */}
           </div>
-          <div id="sign-out-container">
-            <button onClick={this.handleSignOut} id="sign-out-button">
-              Sign Out
-            </button>
-          </div>
-          <div id="right-panel">right</div>
-        </div>
+        </form>
       </div>
     );
   }

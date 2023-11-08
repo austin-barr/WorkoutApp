@@ -41,11 +41,10 @@ function Navbar() {
       >
         Home
       </Link>
-      <Navbar.Form className="d-flex justify-content-center align-items-center w-auto p-3">
-        <button  id="sign-out-button">
-          Sign Out
-        </button>
-      </Navbar.Form>
+      <Link to="/" classname="bg-danger" style={{ bg: "red" }}>
+        Sign Out
+      </Link>
+
       {/* <NavLink to="/SignUpPage"className={"underline" + isActive?" active" : ""}>SignUp</NavLink>
       <NavLink to="/SettingsPage"className={"underline" + isActive?" active" : ""}>Settings</NavLink> */}
       {/* <a href="/SettingsPage">SettingsPage</a>
