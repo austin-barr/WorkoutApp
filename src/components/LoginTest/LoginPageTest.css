@@ -1,0 +1,57 @@
+
+body{
+	background-image: url('barbell.png');
+    	background-size: cover; 
+    	background-repeat: no-repeat; 
+    	background-position: center center;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	margin: 0;
+}
+.loginContainer {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   margin-top: 50px;
+ }
+ 
+ .loginLabel {
+   display: flex;
+   flex-direction: column;
+  
+   justify-content: center;
+   margin-bottom: 20px;
+   font-size: 18px;
+   font-weight: bold;
+ }
+ 
+ input[type="text"], input[type="password"] {
+   width: 300px;
+   height: 40px;
+   border-radius: 5px;
+   border: 1px solid #ccc;
+   padding: 10px;
+   font-size: 16px;
+   margin-bottom: 20px;
+ }
+ 
+ button[type="submit"] {
+   width: 300px;
+   height: 40px;
+   border-radius: 5px;
+   border: none;
+   background-color: #007bff;
+   color: #fff;
+   font-size: 18px;
+   font-weight: bold;
+   cursor: pointer;
+ }
+ 
+ button[type="submit"]:hover {
+   background-color: #0069d9;
+ }
+ 

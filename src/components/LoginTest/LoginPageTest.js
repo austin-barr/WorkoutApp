@@ -1,11 +1,10 @@
 // LoginPage.js
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../bootstrap.css";
+import "./bootstrap.css";
 import axios from "axios";
-import Navbar from "../SettingsBar/SettingsBar";
-// import"./Settingsbar.js"
-// import SignUpPage from '../SignUpPage/SignUpPage';
+
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -26,19 +25,18 @@ function LoginPage() {
   };
 
   return (
-    
-    <div className="d-flex justify-content-center align-items-center w-auto p-3">
-      <Navbar />
+    <div className="d-flex justify-content-center align-items-center">
       <form
         onSubmit={handleSubmit}
-        className="h-100 d-flex flex-column justify-content-center align-items-center"
-        style={{ backgroundColor: "rgba(255, 255, 255, 0.8)", padding: "5px" }}
+        className="col-md-5"
+        style={{ backgroundColor: "rgba(255, 255, 255, 0.8)", padding: "20px" }}
       >
         <h1>Big Fellas</h1>
         <div className="p-4">
           <div className="form-group">
             <label class="text-primary">Username:</label>
             <input
+              type="text"
               className="form-control"
               id="username"
               value={username}
@@ -57,18 +55,14 @@ function LoginPage() {
           </div>
           <p></p>
           <button type="submit" className="btn btn-primary">
-            Settings
+            Login
           </button>
           <div style={{ marginTop: "10px" }}>
-            So You want to become a be fella? Click here to get {" "}
-            <Link to="/SignUpPage"> Swole</Link>
+            <Link to="/register">New user? Click here</Link>
           </div>
         </div>
       </form>
     </div>
   );
-
 }
-
-
 export default LoginPage;

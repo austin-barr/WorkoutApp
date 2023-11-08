@@ -1,85 +1,147 @@
 // SettingsPage.js
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./SettingsPage.css";
+import axios from "axios";
+import Navbar from "../SettingsBar/SettingsBar";
+// import"./Settingsbar.js"
 // import SignUpPage from '../SignUpPage/SignUpPage';
-class Settingspage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: "",
-      password: "",
-    };
-  }
+function SettingsPage() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [phoneNumber, setPhone] = useState("");
+  const [email, setEmail] = useState("");
 
-  handleInputChange = (event) => {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value,
-    });
-  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  handleLogin = () => {
-    const { username, password } = this.state;
-
-    //POST TO LOGIN.JS
     try {
-      const response = fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
+      const response = await axios.post("http://192.168.57.6:3001/api/login", {
+        username,
+        password,
       });
-      if (response.ok) {
-        console.log("Login Successful");
-      } else {
-        console.log("Login Failed");
-      }
-    } catch (error) {
-      console.log(error);
+      localStorage.setItem("token", response.data.token);
+      // Redirect to protected route
+    } catch (err) {
+      console.error(err);
     }
-
-    console.log("Username:", username);
-    console.log("Password:", password);
   };
 
-  render() {
-    return (
-      <div>
-        <div class="loginContainer">
-          <div class="UpperSignIn">
-            <h2>Huge Fellas</h2>
-            <p> You gonna sign in or just sit there? </p>
-          </div>
-          <div>
-            <label>Username:</label>
+  return (
+    
+    <div className="d-flex justify-content-center align-items-center w-auto p-3" >
+      <Navbar />
+      <form
+        onSubmit={handleSubmit}
+        className="h-100 d-flex flex-column justify-content-center align-items-center"
+        style={{ backgroundColor: "rgba(255, 255, 255, 0.8)", padding: "5px" }}
+      >
+        <h1>Big Boys, Big Setting</h1>
+        <div className="p-4">
+          <div className="form-group">
+            <label class="text-primary">Change Username:</label>
             <input
-              type="text"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleInputChange}
+              className="form-control"
+              id="username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
             />
           </div>
-          <div>
-            <label>Password:</label>
+          <div className="form-group">
+            <label class="text-primary">Change Password:</label>
             <input
               type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleInputChange}
+              className="form-control"
+              id="password"
+              value={password}
+              onChange={(event) => setPhone(event.target.value)}
             />
           </div>
-          <button onClick={this.handleLogin}>Login</button>
-          <div class="LowerLogin">
-            <p> Big Fellas Inc© </p>
-            So You want to become a be fella? Click here to get{" "}
+          <div className="form-group">
+            <label class="text-primary">Confirm Password:</label>
+            <input
+              type="password"
+              className="form-control"
+              id="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label class="text-primary"> Change Email:</label>
+            <input
+              type="email"
+              className="form-control"
+              id="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label class="text-primary">Change Phone Number:</label>
+            <input
+              type="phoneNumber"
+              className="form-control"
+              id="phoneNumber"
+              value={password}
+              onChange={(event) => setPhone(event.target.value)}
+            />
+          </div>
+          <p></p>
+          <button type="submit" className="btn btn-primary">
+            Settings
+          </button>
+          <div style={{ marginTop: "10px" }}>
+            So You want to become a be fella? Click here to get {" "}
             <Link to="/SignUpPage"> Swole</Link>
           </div>
         </div>
-      </div>
-    );
-  }
+      </form>
+    </div>
+  );
 }
 
-export default Settingspage;
+export default SettingsPage;
+// <div>
+//   <Navbar />
+//   <div class="SettingsContainer">
+//     <div class="UpperSignIn">
+//       <h2>Big Boys, Big Settings</h2>
+//       <p> Fine tune Yourself</p>
+//     </div>
+//     <div class="userName">
+//       <label>Change User Name:</label>
+//       <input
+//         type="text"
+//         name="username"
+//         value={this.state.username}
+//         onChange={this.handleInputChange}
+//       />
+//     </div>
+//     <div>
+//       <label>Change Email:</label>
+//       <input
+//         type="email"
+//         name="email"
+//         value={this.state.email}
+//         onChange={this.handleInputChange}
+//       />
+//     </div>
+//     <div>
+//       <label>Change Email:</label>
+//       <input
+//         type="text"
+//         name="phoneNumber"
+//         value={this.state.email}
+//         onChange={this.handleInputChange}
+//       />
+//     </div>
+//     <button onClick={this.handleSettings}>Login</button>
+//     <div class="LowerLogin">
+//       <p> Big Fellas Inc© </p>
+//       So You want to become a be fella? Click here to get{" "}
+//       <Link to="/SignUpPage"> Swole</Link>
+//     </div>
+//   </div>
+// </div>
+// );

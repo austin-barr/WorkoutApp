@@ -1,8 +1,9 @@
 // SignUpPage.js
 import photo from "../../static/huge.png";
 import React, { Component } from "react";
-import "./SignUpPage.css";
+import "../bootstrap.css";
 import { Link } from "react-router-dom";
+import Navbar from "../SettingsBar/SettingsBar";
 class SignUpPage extends Component {
   constructor(props) {
     super(props);
@@ -13,8 +14,7 @@ class SignUpPage extends Component {
   }
 
   handleInputChange = (event) => {
-    const { name, value} =
-      event.target;
+    const { name, value } = event.target;
     this.setState({
       [name]: value,
     });
@@ -66,9 +66,20 @@ class SignUpPage extends Component {
 
   render() {
     return (
-      <div class="page-sup">
+      <div
+        class="page-sup"
+        className="h-100 d-flex flex-column justify-content-center align-items-center"
+      >
+        <Navbar />
         {/* call an image */}
-        <div class="SignUpContainer">
+        <form
+          class="SignUpContainer"
+          className="h-100 d-flex flex-column justify-content-center "
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            padding: "20px",
+          }}
+        >
           <div class="UpperSignIn">
             <h2>So, you wanna become a Big Fella©</h2>
             <p> You better not be slacking, SIGN UP NOW! </p>
@@ -76,7 +87,7 @@ class SignUpPage extends Component {
           <div>
             <label>Username:</label>
             <input
-              type="text"
+              className="form-control"
               name="username"
               value={this.state.username}
               onChange={this.handleInputChange}
@@ -86,6 +97,7 @@ class SignUpPage extends Component {
             <label>Password:</label>
             <input
               type="password"
+              className="form-control"
               name="password"
               value={this.state.password}
               onChange={this.handleInputChange}
@@ -95,6 +107,7 @@ class SignUpPage extends Component {
             <label> Confirm Password:</label>
             <input
               type="password"
+              className="form-control"
               name="confirmPassword"
               value={this.state.confrimPassword}
               onChange={this.handleInputChange}
@@ -104,6 +117,7 @@ class SignUpPage extends Component {
             <label>Email:</label>
             <input
               type="email"
+              className="form-control"
               name="email"
               value={this.state.email}
               onChange={this.handleInputChange}
@@ -112,7 +126,7 @@ class SignUpPage extends Component {
           <div>
             <label>Phone Number:</label>
             <input
-              type="text"
+              className="form-control"
               name="PhoneNumber"
               value={this.state.phoneNumber}
               onChange={this.handleInputChange}
@@ -122,12 +136,15 @@ class SignUpPage extends Component {
             <label>Birthday:</label>
             <input
               type="date"
+              className="form-control"
               name="Birthday"
               value={this.state.birthday}
               onChange={this.handleInputChange}
             />
           </div>
-          <button onClick={this.handleSignUp}>SignUp</button>
+          <button onClick={this.handleSignUp} className="btn btn-primary">
+            SignUp
+          </button>
           <div class="LowerSignUp">
             <p>
               {" "}
@@ -136,7 +153,7 @@ class SignUpPage extends Component {
             </p>
             <p> Big Fellas Inc© </p>
           </div>
-        </div>
+        </form>
       </div>
     );
   }

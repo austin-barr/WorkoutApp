@@ -1,0 +1,48 @@
+ nav{
+  position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4%;
+    background-color: #555;
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+}
+
+nav a {
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nav a:hover {
+  background-color: #4d4545;
+}
+
+.active {
+  background-color: #222;
+} 
+
+/* vertical-menu {
+  width: 200px;
+}
+
+.vertical-menu a {
+  background-color: #eee;
+  color: black;
+  text-decoration: none;
+}
+
+.vertical-menu a:hover {
+  background-color: #ccc;
+}
+
+.vertical-menu a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+ */
