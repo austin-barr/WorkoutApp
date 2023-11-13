@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ImageUpload from '../ImageUpload/ImageUpload';
 import PhoneInput from '../PhoneInput/PhoneInput';
-//import signup from './SignUpPage.module.css'
+import signup from './SignUpPage.module.css'
 
 function SignUpPage() {
   const [username, setUsername] = useState('');
@@ -48,7 +48,7 @@ function SignUpPage() {
       "birthDate": birthDate
     };
 
-    let userID;
+    let userId;
 
     try {
       const response = await fetch("/api/signup", {
@@ -68,8 +68,13 @@ function SignUpPage() {
       const responseData = await response.json();
       console.log(responseData)
   
-      userID = responseData.userID;
-      console.log("UserID:", userID);
+      userId = responseData.userId;
+      console.log("UserID:", userId);
+
+      console.log("signup successful")
+      alert("Sign up successful, redirecting to login...")
+
+      window.location = '/'
   
     } catch (error) {
       console.error("Error:", error);
@@ -77,13 +82,13 @@ function SignUpPage() {
 
     console.log("image:")
     console.log(image)
-    if (image && userID) {
+    if (image && userId) {
       const ext = image.name.slice((image.name.lastIndexOf(".") - 1 >>> 0) + 2);
-      const renamedImage = new File([image], `user${userID}.${ext}`, { type: image.type });
+      const renamedImage = new File([image], `user${userId}.${ext}`, { type: image.type });
       console.log(renamedImage)
       const formData = new FormData();
       formData.append('file', renamedImage);
-      formData.append('userID', userID);
+      formData.append('userId', userId);
 
       try {
         const response = await fetch("/api/upload/user", {
@@ -99,7 +104,7 @@ function SignUpPage() {
     
         const responseData = await response.json();
         console.log(responseData)
-    
+
       } catch (error) {
         console.error("Error:", error);
       }
@@ -118,8 +123,6 @@ function SignUpPage() {
       setUsernameError('Username is unavailable')
       isValid = false;
     }
-
-    console.log('passed isAvailable')
 
     // password
     if (!password.trim()) {
@@ -188,8 +191,8 @@ function SignUpPage() {
   }
 
   return (
-    <div className={"d-flex justify-content-center align-items-center "}>
-      <form onSubmit={handleSubmit} className="col-md-5" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
+    <div className={"d-flex justify-content-center align-items-center " + signup.body}>
+      <form onSubmit={handleSubmit} className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
         <h1>Big Fellas</h1>
         <div className="p-4">
           <div className="form-group">
@@ -286,7 +289,7 @@ function SignUpPage() {
               }}
             />
           </div>
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary form-control">
             Sign Up
           </button>
           <div style={{ marginTop: '10px' }}>

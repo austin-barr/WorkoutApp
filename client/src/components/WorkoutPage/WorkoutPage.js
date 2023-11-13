@@ -1,56 +1,13 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import { startOfWeek, endOfWeek, format } from "date-fns";
 import Navbar from "../Navbar/Navbar";
 import WeightGraph from "../WeightGraph/WeightGraph";
 import DurationGraph from "../DurationGraph/DurationGraph";
 import UpdateWeightPopup from "../UpdateWeightPopup/UpdateWeightPopup";
-import home from './HomePage.module.css'
+import workout from './WorkoutPage.module.css'
 
 
-function HomePage() {
-  const [weight, setWeight] = useState('');
-  const [duration, setDuration] = useState('');
-
-  const getWeight = async () => {
-    const data = {
-      date: new Date().toISOString()
-    }
-    console.log(data)
-    try {
-      const response = await fetch('/api/get/weight', {
-          method: "POST",
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage["token"]}`,
-          },
-          body: JSON.stringify(data)
-      });
-  
-      if (!response.ok) {
-          console.error(`Error: ${response.statusText}`);
-          return;
-      }
-
-      console.log(response)
-      
-      setWeight(response.body.weight)
-    }
-    catch (err) {
-
-    }
-
-    return "150 lbs";
-  };
-
-  const getDuration = () => {
-    return "120 min";
-  };
-
-  // useEffect(() => {
-  //   getWeight()
-  //   getDuration()
-  // }, []);
+function WorkoutPage() {
 
   const handleUpdateWeight = (event) => {
     event.preventDefault()
@@ -86,8 +43,16 @@ function HomePage() {
     return formatDate(start) + " - " + formatDate(end);
   };
 
+  const getWeight = () => {
+    return "150 lbs";
+  };
+
+  const getDuration = () => {
+    return "120 min";
+  };
+
   return (
-    <div className={"d-flex justify-content-center align-items-center w-auto p-3 " + home.body}>
+    <div className={"d-flex justify-content-center align-items-center w-auto p-3 " + workout.body}>
       <Navbar />
       <form
         className="h-100 d-flex flex-column justify-content-center align-items-center"
@@ -108,7 +73,6 @@ function HomePage() {
               <input
                 className="form-control"
                 id="weight"
-                // value={weight}
                 style={{ color: "black" }}
               />
               <div id="weight-button-container" class="table-item">
@@ -122,7 +86,6 @@ function HomePage() {
               <input
                 className="form-control"
                 id="duration"
-                // value={duration}
                 style={{ color: "black" }}
               />
               <div id="workout-button-container" class="table-item">
@@ -153,4 +116,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default WorkoutPage;

@@ -1,0 +1,44 @@
+:root {
+  --hover-brightness: 0.70;
+}
+
+.nav{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4vh;
+    background-color: #555;
+    display: grid;
+    grid-template-columns: 16.5% 16.5% 17% 17% 16.5% 16.5%;
+}
+  
+.navLink {
+  color: white;
+}
+
+.navLink, #signOut {
+  text-align: center;
+  text-decoration: none;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-wrap: nowrap;
+}
+
+.navLink:hover, #signOut:hover {
+  filter: brightness(var(--hover-brightness))
+}
+
+.navLink:hover {
+  background-color: #4d4545;
+}
+
+.active {
+  background-color: #222;
+} 
+
+#signOut {
+  background-color: rgb(220, 0, 0);
+}

@@ -23,6 +23,17 @@
   .active {
       background-color: #333;
   }  */
+
+  .body {
+    background-image: url("../../static/barbell.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4vh;
+  }
   
   #grid-container {
     display: grid;
@@ -89,7 +100,7 @@
     background-color: rgb(200, 0, 0);
   }
   
-  #table-container {
+  #tableContainer {
     display: grid;
     grid-template-columns: 35% 25% 40%;
     border: 2px solid;
@@ -97,10 +108,9 @@
     row-gap: 2px;
     margin: 0;
     padding: 0;
-    background-color: black;
   }
   
-  .table-item {
+  .tableItem {
     padding: 5px;
     display: flex;
     align-items: center;

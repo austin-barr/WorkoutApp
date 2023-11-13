@@ -1,73 +1,78 @@
-import React, { Component, useEffect, useState } from "react";
-import { Link, useLocation, NavLink } from "react-router-dom";
-import "./Navbar.css";
-import Container from "react-bootstrap/Container";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import navbar from "./Navbar.module.css";
+// import Container from "react-bootstrap/Container";
 // import Navbar from 'react-bootstrap/Navbar';
 
 function Navbar() {
-  // handleSignOut = (event) => {
-  //   // handle signing out, send something to backend?
+  const handleSignOut = async () => {
+    try {
 
-  //   window.location = "/";
-  // };
+      const data = {
+        "token": localStorage["token"]
+      };
+
+      const response = await fetch("/api/signout", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage["token"]}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        console.error(`Error: ${response.statusText}`);
+      }
+    }
+    catch (err) {
+      console.log(err)
+    }
+    localStorage.removeItem('token')
+    window.location = "/";
+  };
 
   const location = useLocation(); // once ready it returns the 'window.location' object
   const [url, setUrl] = useState(null);
   useEffect(() => {
     setUrl(location.pathname);
   }, [location]);
-  const [isActive, setIsActive] = useState(false);
+
   return (
-    <nav class="vertical-menu" className="h-auto" style={{ Height: "5px" }}>
-      <Link to="/" className={"underline" + (url === "/" ? " active" : "")}>
-        LoginTest
+    <nav className={navbar.nav}>
+      <Link to="/home" className={navbar.navLink + (url === "/home" ? " "+navbar.active : "")}>
+        Home
       </Link>
       <Link
-        to="/SignUpPage"
-        className={"underline" + (url === "/SignUpPage" ? " active" : "")}
+        to="/progress"
+        className={navbar.navLink + (url === "/progress" ? " "+navbar.active : "")}
       >
-        SignUp
+        My Progress
       </Link>
       <Link
-        to="/SettingsPage"
-        className={"underline" + (url === "/SettingsPage" ? " active" : "")}
+        to="/workouts"
+        className={navbar.navLink + (url === "/workouts" ? " "+navbar.active : "")}
+      >
+        My Workouts
+      </Link>
+      <Link
+        to="/suggest-workout"
+        className={navbar.navLink + (url === "/suggest-workout" ? " "+navbar.active : "")}
+      >
+        Suggest a Workout
+      </Link>
+      <Link
+        to="/settings"
+        className={navbar.navLink + (url === "/settings" ? " "+navbar.active : "")}
       >
         Settings
       </Link>
-      <Link
-        to="/HomePage"
-        className={"underline" + (url === "/HomePage" ? " active" : "")}
-      >
-        Home
-      </Link>
-      <Link to="/" classname="bg-danger" style={{ bg: "red" }}>
+      <Link onClick={handleSignOut} className={navbar.navLink} id={navbar.signOut}>
         Sign Out
       </Link>
-
-      {/* <NavLink to="/SignUpPage"className={"underline" + isActive?" active" : ""}>SignUp</NavLink>
-      <NavLink to="/SettingsPage"className={"underline" + isActive?" active" : ""}>Settings</NavLink> */}
-      {/* <a href="/SettingsPage">SettingsPage</a>
-      <a href="#">Link 4</a> */}
     </nav>
   );
 }
 
 export default Navbar;
-
-// function TextLinkExample() {
-//     return (
-//       <Navbar className="bg-body-tertiary">
-//         <Container>
-//           <Navbar.Brand href="#home">Navbar with text</Navbar.Brand>
-//           <Navbar.Toggle />
-//           <Navbar.Collapse className="justify-content-end">
-//             <Navbar.Text>
-//               Signed in as: <a href="#login">Mark Otto</a>
-//             </Navbar.Text>
-//           </Navbar.Collapse>
-//         </Container>
-//       </Navbar>
-//     );
-//   }
-
-//   export default TextLinkExample;
