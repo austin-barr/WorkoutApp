@@ -1,0 +1,21 @@
+/* * {
+  border: solid red 1px;
+} */
+.body {
+  background-image: url("../../static/huge.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+  .form-group {
+    margin-bottom: 10px;
+  }
+  
+  .hide {
+    display: none;
+  }
+  
