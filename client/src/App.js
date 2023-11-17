@@ -18,11 +18,11 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<SignUpPage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/progress" element={<TempPage />} />
-          <Route path="/workouts" element={<TempPage />} />
-          <Route path="/suggest-workout" element={<TempPage />} />
-          <Route path="/settings" element={<TempPage />} />
+          <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+          <Route path="/progress" element={<ProtectedRoute><TempPage /></ProtectedRoute>} />
+          <Route path="/workouts" element={<ProtectedRoute><TempPage /></ProtectedRoute>} />
+          <Route path="/suggest-workout" element={<ProtectedRoute><TempPage /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><TempPage /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

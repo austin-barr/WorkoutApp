@@ -2,34 +2,42 @@ import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children }) => {
-    const [isAuthenticated, setIsAuthenicated] = useState(false)
-    const [res, setRes] = useState('')
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authCheckComplete, setAuthCheckComplete] = useState(false);
 
+  useEffect(() => {
     const checkAuth = async () => {
-      console.log('check auth app')
       try {
         const response = await fetch("/api/check_auth", {
-          method: "GET",
-          mode: "cors"
+          method: "POST",
+          mode: "cors",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage["token"]}`,
+          },
         });
 
-        setRes(response)
+        console.log(response);
+        console.log(response.ok);
 
-        if (response) {
-            setIsAuthenicated(true)
+        if (response.ok) {
+          setIsAuthenticated(true);
         }
-      }
-      catch (err) {
-        throw err
+      } catch (err) {
+        throw err;
+      } finally {
+        setAuthCheckComplete(true);
       }
     };
 
     checkAuth();
-      
-    console.log('isauthenicated')
-    console.log(isAuthenticated)
-    const result = isAuthenticated ? children : <Navigate to="/"/>
-    return result;
+  }, []);
+
+  if (!authCheckComplete) {
+    return null;
+  }
+
+  return isAuthenticated ? children : <Navigate to="/" />;
 };
 
 export default ProtectedRoute;
