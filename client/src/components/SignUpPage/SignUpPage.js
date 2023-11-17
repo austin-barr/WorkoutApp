@@ -94,6 +94,9 @@ function SignUpPage() {
         const response = await fetch("/api/upload/user", {
           method: "POST",
           mode: "cors",
+          headers: {
+            'Authorization': `Bearer ${localStorage["token"]}`,
+          },
           body: formData
         })
 

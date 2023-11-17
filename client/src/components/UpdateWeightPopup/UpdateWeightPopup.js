@@ -50,6 +50,7 @@ export default function UpdateWeightPopup(props) {
 
         console.log('Weight:', weight);
         console.log('Date:', date);
+        props.onClick({weight: weight, date: date})
         handleClose();
       }
       catch (err) {

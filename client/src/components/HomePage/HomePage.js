@@ -10,15 +10,20 @@ import home from './HomePage.module.css'
 
 function HomePage() {
   const [weight, setWeight] = useState('');
+  const [weightInput, setWeightInput] = useState({})
   const [duration, setDuration] = useState('');
+  const [durationInput, setDurationInput] = useState({})
+  const curDate = new Date().toLocaleDateString('fr-CA')
 
   const getWeight = async () => {
+    console.log("getWeight called")
+    console.log(curDate)
     const data = {
-      date: new Date().toISOString()
+      date: curDate
     }
     console.log(data)
     try {
-      const response = await fetch('/api/get/weight', {
+      const response = await fetch('/api/get/recent-weight', {
           method: "POST",
           headers: {
               'Content-Type': 'application/json',
@@ -31,35 +36,66 @@ function HomePage() {
           console.error(`Error: ${response.statusText}`);
           return;
       }
+      const responseData = await response.json();
+      console.log(responseData.rows);
 
-      console.log(response)
-      
-      setWeight(response.body.weight)
+      setWeight(responseData.rows[0].weight + " lbs")
+
     }
     catch (err) {
+      console.log(err)
+    }
+  };
+
+  const getDuration = async () => {
+    const data = {
+      startDate: curDate,
+      endDate: curDate
+    }
+    console.log(data)
+    try {
+      const response = await fetch('/api/get/durations', {
+          method: "POST",
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage["token"]}`,
+          },
+          body: JSON.stringify(data)
+      });
+  
+      if (!response.ok) {
+          console.error(`Error: ${response.statusText}`);
+          return;
+      }
+      const responseData = await response.json();
+      console.log(responseData.rows);
+
+      setDuration(responseData.rows[0].duration + " min")
 
     }
-
-    return "150 lbs";
+    catch (err) {
+      console.log(err)
+    }
   };
 
-  const getDuration = () => {
-    return "120 min";
-  };
+  useEffect( () => {
+    console.log("useeffect called");
+    getWeight();
+    getDuration();
+  }, [weight, duration]);
 
-  // useEffect(() => {
-  //   getWeight()
-  //   getDuration()
-  // }, []);
+    const handleUpdateWeight = (formData) => {
+      console.log('handle weight')
+      console.log(formData)
+      console.log(curDate)
+      setWeightInput(formData)
+      if (formData.date == curDate) {
+        setWeight(formData.weight + " lbs")
+      }
+    };
 
-  const handleUpdateWeight = (event) => {
-    event.preventDefault()
-
-    console.log("weight pressed");
-  };
-
-  const handleLogWorkout = (event) => {
-    event.preventDefault()
+  const handleLogWorkout = (formData) => {
+    setDurationInput(formData)
 
     console.log("workout pressed");
   };
@@ -108,13 +144,13 @@ function HomePage() {
               <input
                 className="form-control"
                 id="weight"
-                // value={weight}
+                value={weight}
                 style={{ color: "black" }}
               />
               <div id="weight-button-container" class="table-item">
                 <UpdateWeightPopup
-                  onClick={(event) => {
-                    handleUpdateWeight(event)
+                  onClick={(formData) => {
+                    handleUpdateWeight(formData)
                   }}
                 />
               </div>
@@ -122,7 +158,7 @@ function HomePage() {
               <input
                 className="form-control"
                 id="duration"
-                // value={duration}
+                value={duration}
                 style={{ color: "black" }}
               />
               <div id="workout-button-container" class="table-item">
@@ -140,10 +176,10 @@ function HomePage() {
             <h1 id="week-header">This week ({getWeek()}):</h1>
             <div id="graphs-container">
               <div id="weight-graph-container">
-                <WeightGraph />
+                <WeightGraph weightInput={weightInput}/>
               </div>
               <div id="duration-graph-container">
-                <DurationGraph />
+                <DurationGraph durationInput={durationInput}/>
               </div>
             </div>
           </div>

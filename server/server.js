@@ -5,6 +5,9 @@ const signupRouter = require('./signup');
 const utilsRouter = require('./utils');
 const authRouter = require('./check_auth');
 require('dotenv').config()
+const cookies = require("cookie-parser");
+
+app.use(cookies());
 
 app.use(express.json());
 

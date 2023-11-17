@@ -13,16 +13,16 @@ import TempPage from './components/TempPage/TempPage';
 // App.js
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{height: '100vh'}}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <ProtectedRoute path="/register" element={<SignUpPage />} />
-          <ProtectedRoute path="/home" element={<HomePage />} />
-          <ProtectedRoute path="/progress" element={<TempPage />} />
-          <ProtectedRoute path="/workouts" element={<TempPage />} />
-          <ProtectedRoute path="/suggest-workout" element={<TempPage />} />
-          <ProtectedRoute path="/settings" element={<TempPage />} />
+          <Route path="/register" element={<SignUpPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/progress" element={<TempPage />} />
+          <Route path="/workouts" element={<TempPage />} />
+          <Route path="/suggest-workout" element={<TempPage />} />
+          <Route path="/settings" element={<TempPage />} />
         </Routes>
       </BrowserRouter>
     </div>

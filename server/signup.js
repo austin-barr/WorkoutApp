@@ -3,8 +3,6 @@ const { createUser } = require('./database/queries')
 const router = express.Router();
 
 router.post('/signup', async (req, res) => {
-    const { username, password, confirm, email, phoneNumber, birthDate } = req.body;
-
     const result = await createUser(req.body, '/defaultImages/BigFella.png');
     if (result) {
         userId = result.insertId;

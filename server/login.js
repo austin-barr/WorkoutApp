@@ -22,10 +22,10 @@ router.post('/login', [
         const userId = await verifyLogin(username, password);
         console.log(userId)
         if (userId !== undefined) {
-            const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET);
-            const result = await createSession(username, token)
+            const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET, { expiresIn: '24h' });
+            const result = await createSession(userId, token)
             if (result.success) {
-                res.status(200).json({ token });
+                res.status(200).json({ token: token });
             }
             else {
                 res.status(401).json({ message: result.message })

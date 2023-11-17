@@ -1,7 +1,7 @@
 const db = require('./dbPool')
 const bcrypt = require('bcrypt')
 
-async function getSession(username, jwt) {
+async function getSession(jwt) {
   try {
     const userData = await getUserByUsername(username);
 
@@ -24,15 +24,10 @@ async function getSession(username, jwt) {
   }
 }
 
-async function createSession(username, jwt) {
-  console.log("username: " + username)
+async function createSession(userId, jwt) {
+  console.log("userId: " + userId)
   try {
-      const userData = await getUserByUsername(username);
-      console.log("get user:")
-      console.log(userData)
-
-      if (userData) {
-          const userId = userData.id;
+      if (userId) {
           console.log(userId)
           console.log(jwt)
 
@@ -177,6 +172,61 @@ async function logWeight(userId, date, weight) {
   }
 };
 
+async function getRecentWeight(userId, date) {
+  console.log('recent weight')
+  console.log(userId)
+  console.log(date)
+  try {
+    console.log('try')
+    const [rows] = await db.execute(
+      'CALL get_recent_weight(?, ?)',
+      [userId, date]
+    );
+    console.log("rows:")
+    console.log(rows)
+    return rows[0]
+  }
+  catch (err) {
+    throw err
+  }
+};
+
+async function getWeights(userId, startDate, endDate) {
+  console.log(userId)
+  console.log(startDate)
+  console.log(endDate)
+  try {
+    const [rows] = await db.execute(
+      'SELECT DATE_FORMAT(date, \'%Y-%m-%d\') AS date, weight FROM user_weights WHERE user_id=? AND date>=? AND date<=? ORDER BY date',
+      [userId, startDate, endDate]
+    );
+    console.log("rows:")
+    console.log(rows)
+    return rows
+  }
+  catch (err) {
+    throw err
+  }
+};
+
+async function getDurations(userId, startDate, endDate) {
+  console.log(userId)
+  console.log(startDate)
+  console.log(endDate)
+  try {
+    const [rows] = await db.execute(
+      'CALL get_workout_duration_by_day(?,?,?)',
+      [userId, startDate, endDate]
+    );
+    console.log("rows:")
+    console.log(rows[0])
+    return rows[0]
+  }
+  catch (err) {
+    throw err
+  }
+};
+
 module.exports = {
   createUser,
   verifyLogin,
@@ -186,4 +236,7 @@ module.exports = {
   createSession,
   removeSession,
   logWeight,
+  getWeights,
+  getDurations,
+  getRecentWeight,
 };

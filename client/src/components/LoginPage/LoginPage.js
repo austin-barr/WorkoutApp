@@ -28,6 +28,7 @@ function LoginPage() {
         mode: "cors",
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage["token"]}`,
         },
         body: JSON.stringify(data)
       })
@@ -42,7 +43,6 @@ function LoginPage() {
 
       const responseData = await response.json();
       console.log(responseData.token);
-
       localStorage["token"] = responseData.token
 
       window.location = "/home"

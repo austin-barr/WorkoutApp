@@ -1,40 +1,8 @@
 const express = require('express')
-const { changeUserImage, getUserByUsername, removeSession, getSession, logWeight } = require('./database/queries')
+const { changeUserImage, getUserByUsername, removeSession, getSession, logWeight, getWeights, getDurations, getRecentWeight } = require('./database/queries')
 const router = express.Router();
 const multer = require('multer');
-const { route } = require('./signup');
-const jwt = require('jsonwebtoken');
-
-const verifyJwt = async (req, res, next) => {
-    console.log('verify called')
-    const authHeader = req.headers['authorization'];
-    console.log(authHeader)
-    const token = authHeader && authHeader.split(' ')[1];
-  
-    if (token == 'undefined' || !authHeader.startsWith('Bearer ')) {
-      req.status = 401;
-      req.body = { error: 'Unauthorized' };
-      console.log("no token")
-      res.status(401).json({ error: 'Unauthorized' });
-      return
-    }
-  
-    try {
-      console.log('enter try')
-      console.log(token)
-      console.log(process.env.JWT_SECRET)
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log(decoded)
-      req.userId = decoded.userId;
-      console.log("decoded")
-      console.log(decoded.userId)
-      next()
-    } catch (err) {
-      console.log(err)
-      req.status = 401;
-      req.body = { error: 'Unauthorized' };
-    }
-};
+const {verifyJwt} = require('./verifyJwt')
 
 const storage = multer.diskStorage({
     destination: 'profileImages/',
@@ -53,7 +21,7 @@ router.post('/upload/test', (req, res) => {
     console.log(req)
 });
 
-router.post('/upload/user', upload.single('file'), async (req, res) => {
+router.post('/upload/user', verifyJwt, upload.single('file'), async (req, res) => {
     console.log('request:')
     //console.log(req)
     console.log(req.body)
@@ -112,13 +80,58 @@ router.post('/log/weight', verifyJwt, async (req, res) => {
     }
 });
 
-router.post('/get/weight', verifyJwt, async (req, res) => {
+router.post('/get/weights', verifyJwt, async (req, res) => {
+    const userId = req.userId
+    const startDate = req.body.startDate
+    const endDate = req.body.endDate
     try {
-        result = await getWeight(req.body.weight)
-        console.log("result here")
+        const result = await getWeights(userId, startDate, endDate)
+        const prevWeight = await getRecentWeight(userId, startDate)
+        console.log("weights result")
+        console.log(result)
+        console.log(prevWeight)
+        if (result) {
+            res.status(200).json({rows: result, prevWeight: prevWeight})
+        }
+        else {
+            res.json({"success":false})
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+});
+
+router.post('/get/durations', verifyJwt, async (req, res) => {
+    const userId = req.userId
+    const startDate = req.body.startDate
+    const endDate = req.body.endDate
+    try {
+        result = await getDurations(userId, startDate, endDate)
+        console.log("durations result")
         console.log(result)
         if (result) {
-            res.json({"result": result})
+            res.status(200).json({rows: result})
+        }
+        else {
+            res.json({success: false})
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+});
+
+router.post('/get/recent-weight', verifyJwt, async (req, res) => {
+    console.log('enter recent weight utils')
+    const userId = req.userId
+    const date = req.body.date
+    try {
+        result = await getRecentWeight(userId, date)
+        console.log("weight result")
+        console.log(result)
+        if (result) {
+            res.status(200).json({rows: result})
         }
         else {
             res.json({"success":false})
