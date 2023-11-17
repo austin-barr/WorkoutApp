@@ -43,7 +43,7 @@ function LoginPage() {
 
       const responseData = await response.json();
       console.log(responseData.token);
-      localStorage["token"] = responseData.token
+      //localStorage["token"] = responseData.token
 
       window.location = "/home"
 

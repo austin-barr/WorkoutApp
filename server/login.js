@@ -23,14 +23,15 @@ router.post('/login', [
         console.log(userId)
         if (userId !== undefined) {
             const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET, { expiresIn: '24h' });
-            const result = await createSession(userId, token)
-            if (result.success) {
-                res.status(200).json({ token: token });
-            }
-            else {
-                res.status(401).json({ message: result.message })
-            }
-        } else {
+            console.log(token)
+            createSession(userId, token)
+            res.status(200).cookie('token', token, {
+                httpOnly: true,
+                secure: false,
+                expires: new Date(Date.now() + 24 * 3600000) // cookie will be removed after 24 hours
+            }).json({})
+        } 
+        else {
             res.status(401).json({ message: 'Invalid username or password' });
         }
     }

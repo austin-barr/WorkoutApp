@@ -47,14 +47,15 @@ router.post('/lookup/username', async (req, res) => {
 
 router.post('/signout', async (req, res) => {
     try {
-        const result = await removeSession(req.body.token);
+        // const result = await removeSession(req.body.token);
+        const result = await removeSession(req.cookies.token);
         console.log("result here")
         console.log(result)
         if (result) {
-            res.json({"result": result})
+            res.status(200).clearCookie('token').json({})
         }
         else {
-            res.json({"success":false})
+            res.status(500).json({ message: result.message})
         }
     }
     catch (err) {

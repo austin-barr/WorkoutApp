@@ -30,7 +30,7 @@ function Navbar() {
       console.log(err)
     }
 
-    localStorage.removeItem("token")
+    // localStorage.removeItem("token")
 
     window.location = "/";
   };

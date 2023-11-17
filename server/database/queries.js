@@ -102,7 +102,7 @@ async function verifyLogin(username, password) {
       const dbPassword = rows[0].password;
       const passwordMatch = await bcrypt.compare(password, dbPassword);
       if (passwordMatch) {
-        console.log("success")
+        console.log("login success")
         return rows[0].id
       }
     }
