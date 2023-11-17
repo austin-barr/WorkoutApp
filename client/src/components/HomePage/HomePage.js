@@ -69,8 +69,10 @@ function HomePage() {
       }
       const responseData = await response.json();
       console.log(responseData.rows);
-
-      setDuration(responseData.rows[0].duration + " min")
+      if (responseData[0] !== undefined)
+        setDuration(responseData.rows[0].duration + " min")
+      else
+        setDuration(0 + " min")
 
     }
     catch (err) {
@@ -89,7 +91,7 @@ function HomePage() {
       console.log(formData)
       console.log(curDate)
       setWeightInput(formData)
-      if (formData.date == curDate) {
+      if (formData.date === curDate) {
         setWeight(formData.weight + " lbs")
       }
     };
