@@ -23,6 +23,8 @@ function SignUpPage() {
   const [emailError, setEmailError] = useState('');
   const [weightError, setWeightError] = useState('');
 
+  const curDate = new Date().toLocaleDateString('fr-CA')
+
   useEffect(() => {
     setIsMounted(true);
 
@@ -48,7 +50,8 @@ function SignUpPage() {
         "email": email,
         "phoneNumber": phoneNumber,
         "birthDate": birthDate,
-        "curWeight": weight
+        "curWeight": weight,
+        "curDate": curDate
       }
     };
 

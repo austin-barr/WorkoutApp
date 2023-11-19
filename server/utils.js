@@ -45,7 +45,7 @@ router.post('/lookup/username', async (req, res) => {
     }
 });
 
-router.post('/signout', async (req, res) => {
+router.post('/signout', verifyJwt, async (req, res) => {
     try {
         // const result = await removeSession(req.body.token);
         const result = await removeSession(req.cookies.token);
