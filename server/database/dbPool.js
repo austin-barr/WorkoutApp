@@ -6,7 +6,8 @@ try {
     user: 'webAppUser',
     password: 'r0ckandst0ne',
     database: 'WorkoutApp',
-    connectionLimit: 10
+    connectionLimit: 10,
+    multipleStatements: true
   });
 }
 catch (err) {

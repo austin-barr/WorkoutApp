@@ -3,16 +3,13 @@ const { createUser } = require('./database/queries')
 const router = express.Router();
 
 router.post('/signup', async (req, res) => {
-    const result = await createUser(req.body, '/defaultImages/BigFella.png');
-    if (result) {
-        userId = result.insertId;
-        console.log(result)
+    const userId = await createUser(req.body.userData, '/defaultImages/BigFella.png');
+    if (userId) {
         console.log(userId)
         res.json({success:true, userId:userId})
     }
     else {
-    res.status(200).json({success:false, message: "failed to create user"})
-    console.log(result);
+        res.status(500).json({message: "Internal server error"})
     }
 });
 

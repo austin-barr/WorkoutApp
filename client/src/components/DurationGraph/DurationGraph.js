@@ -1,4 +1,4 @@
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import { startOfWeek, endOfWeek } from 'date-fns'
 import { Chart, registerables } from 'chart.js'
@@ -74,7 +74,6 @@ export default function DurationGraph(props) {
                         y: {
                             min: graphMin,
                             max: graphMax,
-                            offset: true,
                             ticks: {
                                 stepSize: yStep,
                             }
@@ -94,7 +93,7 @@ export default function DurationGraph(props) {
     }, [props.durationInput]);
     
     return graphData && options ? (
-        <Line options={options} data={graphData} />
+        <Bar options={options} data={graphData} />
       ) : (
         <form className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)'}}>
             <div className="p-4">

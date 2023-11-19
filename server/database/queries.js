@@ -65,18 +65,19 @@ async function removeSession(jwt) {
 }
 
 async function createUser(userData, imagePth) {
-    const { username, password, email, phoneNumber, birthDate} = userData;
-    console.log(userData)
+    const { username, password, email, phoneNumber, birthDate, curWeight } = userData;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
       const [rows] = await db.execute(
-          'INSERT INTO user (username, password, email, phone, birth_date, image) VALUES (?, ?, ?, ?, ?, ?)',
-          [username, hashedPassword, email, phoneNumber, birthDate, imagePth]
+          'CALL add_user_with_weight(?,?,?,?,?,?,?,@user_id)',
+          [username, hashedPassword, email, phoneNumber, birthDate, imagePth, curWeight]
       );
         console.log('rows here:')
         console.log(rows)
-      return rows
+        const user_id = rows[0][0].user_id;
+        console.log(user_id)
+      return user_id
     }
     catch (err) {
       console.log(err)

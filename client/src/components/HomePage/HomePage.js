@@ -38,8 +38,10 @@ function HomePage() {
       }
       const responseData = await response.json();
       console.log(responseData.rows);
-
-      setWeight(responseData.rows[0].weight + " lbs")
+      if (responseData.rows[0] !== undefined)
+        setWeight(responseData.rows[0].weight + " lbs")
+      else
+        setWeight("Not tracked")
 
     }
     catch (err) {
@@ -69,7 +71,7 @@ function HomePage() {
       }
       const responseData = await response.json();
       console.log(responseData.rows);
-      if (responseData[0] !== undefined)
+      if (responseData.rows[0] !== undefined)
         setDuration(responseData.rows[0].duration + " min")
       else
         setDuration(0 + " min")
@@ -84,7 +86,7 @@ function HomePage() {
     console.log("useeffect called");
     getWeight();
     getDuration();
-  }, [weight, duration]);
+  }, [weight, duration, weightInput]);
 
     const handleUpdateWeight = (formData) => {
       console.log('handle weight')

@@ -7,6 +7,7 @@ Chart.register(...registerables)
 export default function WeightGraph(props) {
     const [graphData, setGraphData] = useState(null)
     const [options, setOptions] = useState(null)
+    const [noWeights, setNoWeights] = useState(false)
     
     const todayDate = new Date()
     const DOTW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -38,6 +39,10 @@ export default function WeightGraph(props) {
                 
                 const responseData = await response.json()
                 const rows = responseData.rows
+                if (responseData.prevWeight[0] === undefined) {
+                    setNoWeights(true);
+                    return
+                }
                 const prevWeight = parseFloat(responseData.prevWeight[0].weight)
 
                 let lastWeight = prevWeight
@@ -87,7 +92,7 @@ export default function WeightGraph(props) {
                 });
             }
             catch (err) {
-                console.log(err)
+                console.error(err)
             }
         }
 
@@ -97,11 +102,18 @@ export default function WeightGraph(props) {
     
     return graphData && options ? (
         <Line options={options} data={graphData} />
+      ) : ( noWeights ? (
+        <form className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
+            <div className="p-4">
+            No weight data available
+            </div>
+        </form>
       ) : (
         <form className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
             <div className="p-4">
             Loading
             </div>
         </form>
+      )
       )
   }

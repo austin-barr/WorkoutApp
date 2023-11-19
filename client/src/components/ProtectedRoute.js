@@ -9,12 +9,8 @@ const ProtectedRoute = ({ children }) => {
     const checkAuth = async () => {
       try {
         const response = await fetch("/api/check_auth", {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage["token"]}`,
-          },
+          method: "GET",
+          mode: "cors"
         });
 
         console.log(response);

@@ -82,7 +82,9 @@ function LoginPage() {
                 setUsernameError('');
               }}
             />
-            {usernameError && <small className="text-danger">{usernameError}</small>}
+            <div className="form-error-container">
+              <small className="text-danger form-error-message">{usernameError}</small>
+            </div>
           </div>
           <div className="form-group">
             <label class = "text-primary">Password:</label>
@@ -92,9 +94,11 @@ function LoginPage() {
                     setPasswordError('');
                   }}
             />
-            {passwordError && <small className="text-danger">{passwordError}</small>}
+            <div className="form-error-container">
+              <small className="text-danger form-error-message">{passwordError}</small>
+            </div>
           </div>
-          <button onClick={handleSubmit} type="submit" className="btn btn-primary">Login</button>
+          <button onClick={handleSubmit} type="submit" className="btn btn-primary form-control">Login</button>
           <div style={{ marginTop: '10px' }}>
             <Link to="/register">New user? Click here</Link>
           </div>

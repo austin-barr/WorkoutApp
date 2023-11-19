@@ -2122,6 +2122,20 @@ progress {
   max-width: 480px;
 }
 
+.form-group {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.form-error-container {
+  position: relative;
+  height: 1em;
+}
+
+.form-error-message {
+  position:absolute;
+}
+
 .form-control {
   display: block;
   padding: 0.75rem 1.5rem;
@@ -2140,7 +2154,7 @@ progress {
 
   padding: 8px;
   margin-top: 4px;
-  margin-bottom: 12px;
+  margin-bottom: 2px;
   border: 1px solid #aaa;
   border-radius: 4px;
   box-sizing: border-box;
