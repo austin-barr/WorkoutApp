@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+// const { removeSession, getSession } = require('./database/queries');
 
 async function verifyJwt(req, res, next) {
     console.log('verify called')
@@ -24,7 +25,7 @@ async function verifyJwt(req, res, next) {
 
       if (isExpired) {
         console.log('Token expired');
-        req.status.status(401).json({ error: 'Unauthorized - Token had expired' });
+        req.status.status(401).json({ error: 'Unauthorized - Token has expired' });
       }
 
       req.userId = decoded.userId;

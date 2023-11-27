@@ -101,6 +101,9 @@ function SignUpPage() {
         const response = await fetch("/api/upload/user", {
           method: "POST",
           mode: "cors",
+          headers: {
+            'Content-Type': 'application/json'
+          },
           body: formData
         })
 
@@ -205,7 +208,7 @@ function SignUpPage() {
 
   return (
     <div className={"d-flex justify-content-center align-items-center " + signup.body}>
-      <form onSubmit={handleSubmit} className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
+      <form onSubmit={handleSubmit} className="form-container">
         <h1>Big Fellas</h1>
         <div className="p-4">
           <div className="form-group">

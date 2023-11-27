@@ -1,5 +1,5 @@
 const express = require('express')
-const { changeUserImage, getUserByUsername, removeSession, getSession, logWeight, getWeights, getDurations, getRecentWeight } = require('./database/queries')
+const { changeUserImage, getUserByUsername, removeSession, getSession, logWeight, getWeights, getDurations, getRecentWeight, getExercises, addWorkout } = require('./database/queries')
 const router = express.Router();
 const multer = require('multer');
 const {verifyJwt} = require('./verifyJwt')
@@ -133,6 +133,56 @@ router.post('/get/recent-weight', verifyJwt, async (req, res) => {
         console.log(result)
         if (result) {
             res.status(200).json({rows: result})
+        }
+        else {
+            res.json({"success":false})
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+});
+
+router.get('/get/exercises', verifyJwt, async (req, res) => {
+    try {
+        rows = await getExercises()
+        if (rows) {
+            const min = Math.min(...rows.map((row) => row.id))
+            let exercises = []
+            let seen = []
+            for (let row of rows) {
+                if (!(row.id in seen)) {
+                    seen.push(row.id)
+                    exercises[row.id-min] = {
+                        name: row.name,
+                        description: row.description,
+                        image: row.image,
+                        duration: row.duration_per_rep,
+                        muscleGroups: []
+                    }
+                }
+                exercises[row.id-min].muscleGroups.push(row.muscle_group)
+            }
+            console.log(exercises)
+            res.status(200).json({exercises: exercises})
+        }
+        else {
+            res.json({success :false})
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+});
+
+router.post('/add/workout', verifyJwt, async (req, res) => {
+    const exerciseList = req.body
+    try {
+        result = await addWorkout(exerciseList)
+        console.log("result here")
+        console.log(result)
+        if (result) {
+            res.json({"result": result})
         }
         else {
             res.json({"success":false})

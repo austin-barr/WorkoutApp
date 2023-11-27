@@ -27,8 +27,7 @@ export default function WeightGraph(props) {
                     method: "POST",
                     mode: "cors",
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage["token"]}`,
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(postData),
                 });
@@ -103,13 +102,13 @@ export default function WeightGraph(props) {
     return graphData && options ? (
         <Line options={options} data={graphData} />
       ) : ( noWeights ? (
-        <form className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
+        <form className="form-container">
             <div className="p-4">
             No weight data available
             </div>
         </form>
       ) : (
-        <form className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
+        <form className="form-container">
             <div className="p-4">
             Loading
             </div>

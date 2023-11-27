@@ -19,7 +19,7 @@ function App() {
           <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<SignUpPage />} />
           <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-          <Route path="/progress" element={<ProtectedRoute><TempPage /></ProtectedRoute>} />
+          <Route path="/progress" element={<ProtectedRoute><ProgressPage /></ProtectedRoute>} />
           <Route path="/workouts" element={<ProtectedRoute><TempPage /></ProtectedRoute>} />
           <Route path="/suggest-workout" element={<ProtectedRoute><TempPage /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><TempPage /></ProtectedRoute>} />

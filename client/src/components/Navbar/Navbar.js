@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import navbar from "./Navbar.module.css";
-// import Container from "react-bootstrap/Container";
-// import Navbar from 'react-bootstrap/Navbar';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 
 function Navbar() {
   const handleSignOut = async () => {
@@ -14,10 +13,8 @@ function Navbar() {
 
       const response = await fetch("/api/signout", {
         method: "POST",
-        mode: "cors",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage["token"]}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(data),
       });
@@ -29,8 +26,6 @@ function Navbar() {
     catch (err) {
       console.log(err)
     }
-
-    // localStorage.removeItem("token")
 
     window.location = "/";
   };
@@ -64,15 +59,19 @@ function Navbar() {
       >
         Suggest a Workout
       </Link>
-      <Link
-        to="/settings"
-        className={navbar.navLink + (url === "/settings" ? " "+navbar.active : "")}
-      >
-        Settings
-      </Link>
-      <Link onClick={handleSignOut} className={navbar.navLink} id={navbar.signOut}>
-        Sign Out
-      </Link>
+      <DropdownButton title="Profile" className={navbar.dropdown} bsPrefix={navbar.dropdownButton + (url === "/settings" ? " "+navbar.active : "")}>
+        <Link
+          to="/settings"
+          className={navbar.navLink}
+        >
+          Settings
+        </Link>
+        <Dropdown.Item as="button">Another action</Dropdown.Item>
+        <Dropdown.Item as="button">Something else</Dropdown.Item>
+        <Link onClick={handleSignOut} className={navbar.navLink} id={navbar.signOut}>
+          Sign Out
+        </Link>
+      </DropdownButton>
     </nav>
   );
 }

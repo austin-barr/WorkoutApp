@@ -26,8 +26,7 @@ export default function DurationGraph(props) {
                     method: "POST",
                     mode: "cors",
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage["token"]}`,
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(postData),
                 });
@@ -95,7 +94,7 @@ export default function DurationGraph(props) {
     return graphData && options ? (
         <Bar options={options} data={graphData} />
       ) : (
-        <form className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)'}}>
+        <form className="form-container">
             <div className="p-4">
             Loading
             </div>

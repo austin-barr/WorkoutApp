@@ -3,22 +3,14 @@ const bcrypt = require('bcrypt')
 
 async function getSession(jwt) {
   try {
-    const userData = await getUserByUsername(username);
+      const rows = await db.execute('SELECT * FROM user_session WHERE jwt=?', [jwt])
+      const sessionId = rows[0].id
 
-    if (userData) {
-        const userId = userData.id; 
-
-        const rows = await db.execute('SELECT * FROM user_session WHERE jwt=? AND user_id=?', [jwt, userId])
-        const sessionID = rows[0].id
-
-        if (sessionID) {
-            return { success: true, sessionID: sessionID};
-        } else {
-            return { success: false, message: 'Failed to verify session' };
-        }
-    } else {
-        return { success: false, message: 'User not found' };
-    }
+      if (sessionId) {
+          return { success: true, sessionId: sessionId};
+      } else {
+          return { success: false, message: 'Failed to verify session' };
+      }
   } catch (error) {
       return { success: false, message: 'Error verifying session' };
   }
@@ -228,6 +220,51 @@ async function getDurations(userId, startDate, endDate) {
   }
 };
 
+async function getExercises() {
+  console.log('get exercises hit')
+  try {
+    const [rows] = await db.execute(
+      'CALL get_exercises_with_muscles()'
+    );
+    console.log("rows:")
+    console.log(rows[0])
+    return rows[0]
+  }
+  catch (err) {
+    throw err
+  }
+};
+
+async function getWorkout(userId, workoutName) {
+  try {
+    const [rows] = await db.execute(
+      'CALL get_workout_details(?,?)',
+      [userId, workoutName]
+    );
+      console.log("workout rows:")
+      console.log(rows)
+      return rows[0]
+  }
+  catch (err) {
+    throw err
+  }
+};
+
+async function addWorkout(userId, workoutName, exerciseList) {
+  try {
+    const [rows] = await db.execute(
+      `INSERT INTO user_workout (user_id, name) \
+       VALUES (${userId} ${workoutName})`
+    );
+    console.log("rows:")
+    console.log(rows[0])
+    return rows[0]
+  }
+  catch (err) {
+    throw err
+  }
+};
+
 module.exports = {
   createUser,
   verifyLogin,
@@ -240,4 +277,7 @@ module.exports = {
   getWeights,
   getDurations,
   getRecentWeight,
+  getExercises,
+  getWorkout,
+  addWorkout
 };

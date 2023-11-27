@@ -25,10 +25,8 @@ function LoginPage() {
     try {
       const response = await fetch("/api/login", {
         method: "POST",
-        mode: "cors",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage["token"]}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       })
@@ -71,7 +69,7 @@ function LoginPage() {
 
   return (
     <div className={"id-flex justify-content-center align-items-center " + login.body} >
-      <form className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
+      <form className="form-container">
         <h1>Big Fellas</h1>
         <div className="p-4">
           <div className="form-group">
