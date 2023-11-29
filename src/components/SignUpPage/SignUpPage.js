@@ -3,7 +3,7 @@ import photo from "../../static/huge.png";
 import React, { Component } from "react";
 import "../bootstrap.css";
 import { Link } from "react-router-dom";
-import Navbar from "../SettingsBar/SettingsBar";
+import Navbar from "../Navbar/Navbar";
 class SignUpPage extends Component {
   constructor(props) {
     super(props);
@@ -69,6 +69,7 @@ class SignUpPage extends Component {
       <div
         class="page-sup"
         className="h-100 d-flex flex-column justify-content-center align-items-center"
+        style={{padding: "50px" }}
       >
         <Navbar />
         {/* call an image */}
@@ -77,7 +78,7 @@ class SignUpPage extends Component {
           className="h-100 d-flex flex-column justify-content-center "
           style={{
             backgroundColor: "rgba(255, 255, 255, 0.8)",
-            padding: "20px",
+            padding: "25px",
           }}
         >
           <div class="UpperSignIn">
@@ -127,6 +128,7 @@ class SignUpPage extends Component {
             <label>Phone Number:</label>
             <input
               className="form-control"
+              type="tel"
               name="PhoneNumber"
               value={this.state.phoneNumber}
               onChange={this.handleInputChange}
@@ -143,7 +145,7 @@ class SignUpPage extends Component {
             />
           </div>
           <button onClick={this.handleSignUp} className="btn btn-primary">
-            SignUp
+            Sign Up
           </button>
           <div class="LowerSignUp">
             <p>

@@ -5,7 +5,14 @@ import Chart from "chart.js/auto";
 import { startOfWeek, endOfWeek, format } from "date-fns";
 // import "./HomePage.css";
 import "../bootstrap.css";
-import Navbar from "../SettingsBar/SettingsBar";
+import Navbar from "../Navbar/Navbar.js";
+import { Calendar } from "@fullcalendar/core";
+import {myCalendar} from "../Calendar/DemoApp.js";
+/// calendar
+import { createRoot } from 'react-dom/client'
+// import DemoApp from './DemoApp'
+import { render } from 'react-dom'
+
 
 class HomePage extends Component {
   // constructor(props) {
@@ -15,6 +22,8 @@ class HomePage extends Component {
   //     password: "",
   //   };
   // }
+
+  //myCalendar = new Calendar();
 
   handleUpdateWeight = (event) => {
     console.log("weight pressed");
@@ -66,6 +75,11 @@ class HomePage extends Component {
     let end = endOfWeek(today);
     // get weights from weight history
     let weights = [150, 150, 151, 152];
+    
+    // document.addEventListener('DOMContentLoaded', function() {
+    //   createRoot(document.body.appendChild(document.createElement('div')))
+    //     .render(<DemoApp />)
+    // })
 
     const data = {
       labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -136,7 +150,7 @@ class HomePage extends Component {
           className="h-100 d-flex flex-column justify-content-center align-items-center"
           style={{
             backgroundColor: "rgba(255, 255, 255, 0.8)",
-            padding: "5px",
+            padding: "25px",
           }}
         >
           <div id="grid-container" className="p4" data-bs-theme="dark">
@@ -168,6 +182,7 @@ class HomePage extends Component {
                   id="duration"
                   style={{ color: "black" }}
                 />
+                <myCalendar />
                 {/* <div id="duration" class="table-item">
                   {this.getDuration()}
                 </div> */}

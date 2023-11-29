@@ -23,7 +23,7 @@
   --bs-yellow: #f0ad4e;
   --bs-green: #4bbf73;
   --bs-teal: #20c997;
-  --bs-cyan: #1f9bcf;
+  --bs-cyan: #205b75;
   --bs-black: #000;
   --bs-white: #fff;
   --bs-gray: #919aa1;
@@ -2178,6 +2178,48 @@ progress {
   background-color: #f7f7f9;
   background-clip: padding-box;
   border: 0 solid var(--bs-border-color);
+  border-radius: 0;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.react-scrollable-list {
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box;
+   box-sizing: border-box;
+  /* width: 100%; */
+  height: 400px;
+  width: auto;
+  overflow-y: scroll;
+  border: #ddd solid 1px;
+}
+
+.react-scrollable-list-item {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 40px;
+  width: 100%;
+  /* padding: 5px; */
+  background-color: #f2f2f2;
+  border-bottom: #ddd solid 1px;
+  pointer-events: none;
+}
+
+.form-control2 {
+  display: block;
+  /* height : 500px; */
+   width: 500px; 
+  padding: 1rem 1rem;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #f7f7f9;
+  background-clip: padding-box;
+  border: 5px solid var(--bs-border-color);
   border-radius: 0;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
