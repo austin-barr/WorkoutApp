@@ -56,7 +56,7 @@ function LoginPage() {
               onChange={(event) => setPassword(event.target.value)}
             />
           </div>
-          <p></p>
+          <p> </p>
           <button type="submit" className="btn btn-primary">
             Log in
           </button>

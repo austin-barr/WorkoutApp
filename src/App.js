@@ -4,7 +4,7 @@ import SignUpPage from "./components/SignUpPage/SignUpPage";
 import HomePage from "./components/HomePage/HomePage";
 import SettingsPage from "./components/SettingsPage/SettingsPage";
 // import Settingsbar from "./components/SettingsPage/Settingsbar";
-import LoginPageTest from "./components/LoginTest/LoginPageTest";
+// import LoginPageTest from "./components/LoginTest/LoginPageTest";
 import MyWorkouts from "./components/MyWorkouts/MyWorkouts";
 
 // App.js
@@ -19,7 +19,7 @@ function App() {
           <Route path="/SignUpPage" element={<SignUpPage />} />
           <Route path="/HomePage" element={<HomePage />} />
           <Route path="/SettingsPage" element={<SettingsPage />} /> 
-          <Route path="/LoginPageTest" element={<LoginPageTest />}/>
+          {/* <Route path="/LoginPageTest" element={<LoginPageTest />}/> */}
           <Route path="/MyWorkouts" element={<MyWorkouts />}/>
         </Routes>
       </BrowserRouter>
