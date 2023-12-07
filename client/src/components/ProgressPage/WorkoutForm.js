@@ -46,13 +46,20 @@ const WorkoutForm = () => {
     if (!validateInput()) {
         return;
     }
+
+    console.log(workoutName)
+
     const newExercise = {
-      selectedExercise,
-      weight,
-      sets,
-      reps,
+      name: workoutName,
+      exercise: selectedExercise,
+      weight: weight,
+      sets: sets,
+      reps: reps,
     };
     setAddedExerciseList([...addedExerciseList, newExercise]);
+    console.log(newExercise)
+    console.log(addedExerciseList)
+    setWorkoutName('');
     setSelectedExercise('');
     setWeight('');
     setSets('');
@@ -108,8 +115,9 @@ const WorkoutForm = () => {
     event.preventDefault()
     console.log(addedExerciseList)
     
-    const data = exerciseList.map((ex) => (
-        {
+    const data = addedExerciseList.map((ex) => (
+        {   
+            name: ex.workoutName,
             exercise: ex.selectedExercise,
             weight: ex.weight,
             sets: ex.sets,

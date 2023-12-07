@@ -4,7 +4,6 @@ const {verifyJwt} = require('./verifyJwt')
 
 
 router.get('/check_auth', verifyJwt, async (req, res) => {
-    console.log("check_auth hit");
     res.status(200).json({ isAuthenticated: true});
 });
 

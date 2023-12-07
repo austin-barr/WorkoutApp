@@ -38,28 +38,6 @@
     box-sizing: border-box;
   } */
   
-  button:hover {
-    background-color: light-blue;
-  }
-  
-  button {
-    width: 100%;
-    color: white;
-    background-color: #09f;
-    padding: 15px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  input[type="submit"]:hover {
-    background-color: #07d;
-  }
-  
-  input.error {
-    border: 2px solid red;
-  }
   .UpperSignIn {
     text-align: center;
   }

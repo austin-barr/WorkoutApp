@@ -30,6 +30,8 @@ export default function DurationGraph(props) {
                     },
                     body: JSON.stringify(postData),
                 });
+                console.log('after duratons post')
+                console.log(response)
             
                 if (!response.ok) {
                     console.error(`Error: ${response.statusText}`);
@@ -94,10 +96,10 @@ export default function DurationGraph(props) {
     return graphData && options ? (
         <Bar options={options} data={graphData} />
       ) : (
-        <form className="form-container">
+        <div className="form-container">
             <div className="p-4">
             Loading
             </div>
-        </form>
+        </div>
       )
   }

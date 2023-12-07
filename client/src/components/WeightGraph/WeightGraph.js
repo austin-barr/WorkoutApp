@@ -18,11 +18,13 @@ export default function WeightGraph(props) {
 
     useEffect(() => {
         const getWeights = async () => {
+            console.log('get weightSS')
             const postData = {
                 startDate: start,
                 endDate: end
             }
             try{
+                console.log('try)')
                 const response = await fetch('/api/get/weights', {
                     method: "POST",
                     mode: "cors",
@@ -31,18 +33,22 @@ export default function WeightGraph(props) {
                     },
                     body: JSON.stringify(postData),
                 });
+                console.log('after post')
+                console.log(response)
             
                 if (!response.ok) {
                     console.error(`Error: ${response.statusText}`);
                 }
                 
                 const responseData = await response.json()
+                console.log('response')
+                console.log(responseData)
                 const rows = responseData.rows
-                if (responseData.prevWeight[0] === undefined) {
+                const prevWeight = parseFloat(responseData.prevWeight)
+                if (rows[0] === undefined && prevWeight[0] === undefined) {
                     setNoWeights(true);
                     return
                 }
-                const prevWeight = parseFloat(responseData.prevWeight[0].weight)
 
                 let lastWeight = prevWeight
                 let rowIndex = 0
@@ -102,17 +108,17 @@ export default function WeightGraph(props) {
     return graphData && options ? (
         <Line options={options} data={graphData} />
       ) : ( noWeights ? (
-        <form className="form-container">
+        <div className="form-container">
             <div className="p-4">
             No weight data available
             </div>
-        </form>
+        </div>
       ) : (
-        <form className="form-container">
+        <div className="form-container">
             <div className="p-4">
             Loading
             </div>
-        </form>
+        </div>
       )
       )
   }

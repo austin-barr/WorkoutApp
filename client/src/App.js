@@ -5,7 +5,7 @@ import SignUpPage from "./components/SignUpPage/SignUpPage";
 import HomePage from "./components/HomePage/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import './bootstrap.css'
-import SettingsPage from "./components/SettingsPage/SettingsPage";
+// import SettingsPage from "./components/SettingsPage/SettingsPage";
 import ProgressPage from "./components/ProgressPage/ProgressPage";
 import WorkoutPage from "./components/WorkoutPage/WorkoutPage";
 import TempPage from './components/TempPage/TempPage';

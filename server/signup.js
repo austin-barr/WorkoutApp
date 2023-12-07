@@ -5,7 +5,6 @@ const router = express.Router();
 router.post('/signup', async (req, res) => {
     const userId = await createUser(req.body.userData, '/defaultImages/BigFella.png');
     if (userId) {
-        console.log(userId)
         res.json({success:true, userId:userId})
     }
     else {

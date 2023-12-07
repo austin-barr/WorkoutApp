@@ -17,14 +17,10 @@ async function getSession(jwt) {
 }
 
 async function createSession(userId, jwt) {
-  console.log("userId: " + userId)
   try {
       if (userId) {
-          console.log(userId)
-          console.log(jwt)
 
           const sessionResult =  await db.execute('INSERT INTO user_session (jwt, user_id) VALUES (?, ?);', [jwt, userId]);
-          console.log(sessionResult)
 
           if (sessionResult) {
               return { success: true, sessionID: sessionResult.insertId };
@@ -40,11 +36,8 @@ async function createSession(userId, jwt) {
 }
 
 async function removeSession(jwt) {
-  console.log(jwt)
   try {
       const sessionResult =  await db.execute('DELETE FROM user_session WHERE jwt=?;', [jwt]);
-      console.log("delete result:")
-      console.log(sessionResult)
 
       if (sessionResult) {
           return { success: true, result: sessionResult };
@@ -65,37 +58,31 @@ async function createUser(userData, imagePth) {
           'CALL add_user_with_weight(?,?,?,?,?,?,?,?,@user_id)',
           [username, hashedPassword, email, phoneNumber, birthDate, imagePth, curWeight, curDate]
       );
-        console.log('rows here:')
-        console.log(rows)
         const user_id = rows[0][0].user_id;
-        console.log(user_id)
       return user_id
     }
     catch (err) {
-      console.log(err)
+      throw err
     }
 }
 
 async function changeUserImage(userId, imagePth) {
-  console.log(userId, imagePth)
   const [rows] = await db.execute(
       'UPDATE user SET image=? WHERE id=?',
       [imagePth, userId]
   );
 
-  console.log(rows)
   return rows
+  // need error handling
 }
 
 async function verifyLogin(username, password) {
   try {
     const [rows] = await db.execute('SELECT id, password FROM user WHERE username = ?', [username]);
-    console.log(rows);
     if (rows[0] !== undefined) {
       const dbPassword = rows[0].password;
       const passwordMatch = await bcrypt.compare(password, dbPassword);
       if (passwordMatch) {
-        console.log("login success")
         return rows[0].id
       }
     }
@@ -105,11 +92,23 @@ async function verifyLogin(username, password) {
 };
 
 async function getUserByUsername(username) {
-  console.log(username)
   try {
     const [rows] = await db.execute(
       'SELECT * FROM user WHERE username=?',
       [username]
+    );
+    return rows[0]
+  }
+  catch (err) {
+    throw err
+  }
+};
+async function getUsername(userID) {
+  
+  try {
+    const [rows] = await db.execute(
+      'SELECT username FROM user WHERE id=?',
+      [userID]
     );
       console.log("rows:")
     console.log(rows)
@@ -119,30 +118,36 @@ async function getUserByUsername(username) {
     throw err
   }
 };
+async function getUserImage(userId) {
+  console.log("break")
+  console.log(userId)
+  try {
+    const [rows] = await db.execute(
+      "SELECT image FROM user WHERE id=?" ,
+      [userId]
+    );
+      console.log("rows:")
+    console.log(rows)
+    return rows[0]
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
 
 async function logWeight(userId, date, weight) {
-  console.log(userId)
-  console.log(date)
-  console.log(weight)
   try {
     const existingRows = await db.execute(
       'SELECT * FROM user_weights WHERE user_id=? AND date=?',
       [userId, date]
     );
-    console.log(existingRows)
-    console.log(existingRows[0].length)
     if (existingRows[0].length == 0) {
-      console.log('insert')
       const insertResult = await db.execute(
         'INSERT INTO user_weights (user_id, date, weight) VALUES (?, ?, ?)',
         [userId, date, weight]
       );
-      console.log(insertResult)
       if (insertResult) {
-        return insertResult.insertId
-      }
-      else {
-        return {success: false, message: "failed to insert weight"}
+        return insertResult[0].insertId
       }
     }
     else {
@@ -151,12 +156,8 @@ async function logWeight(userId, date, weight) {
         'UPDATE user_weights SET weight=? WHERE user_id=? AND date=?',
         [weight, userId, date]
       )
-      console.log(updateResult)
       if (updateResult) {
         return updateResult[0].insertId
-      }
-      else {
-        return {success: false, message: "failed to update weight"}
       }
     }
   }
@@ -166,17 +167,11 @@ async function logWeight(userId, date, weight) {
 };
 
 async function getRecentWeight(userId, date) {
-  console.log('recent weight')
-  console.log(userId)
-  console.log(date)
   try {
-    console.log('try')
     const [rows] = await db.execute(
       'CALL get_recent_weight(?, ?)',
       [userId, date]
     );
-    console.log("rows:")
-    console.log(rows)
     return rows[0]
   }
   catch (err) {
@@ -185,16 +180,11 @@ async function getRecentWeight(userId, date) {
 };
 
 async function getWeights(userId, startDate, endDate) {
-  console.log(userId)
-  console.log(startDate)
-  console.log(endDate)
   try {
     const [rows] = await db.execute(
       'SELECT DATE_FORMAT(date, \'%Y-%m-%d\') AS date, weight FROM user_weights WHERE user_id=? AND date>=? AND date<=? ORDER BY date',
       [userId, startDate, endDate]
     );
-    console.log("rows:")
-    console.log(rows)
     return rows
   }
   catch (err) {
@@ -203,16 +193,11 @@ async function getWeights(userId, startDate, endDate) {
 };
 
 async function getDurations(userId, startDate, endDate) {
-  console.log(userId)
-  console.log(startDate)
-  console.log(endDate)
   try {
     const [rows] = await db.execute(
-      'CALL get_workout_duration_by_day(?,?,?)',
+      'CALL get_logged_workout_duration_by_day(?,?,?)',
       [userId, startDate, endDate]
     );
-    console.log("rows:")
-    console.log(rows[0])
     return rows[0]
   }
   catch (err) {
@@ -221,13 +206,10 @@ async function getDurations(userId, startDate, endDate) {
 };
 
 async function getExercises() {
-  console.log('get exercises hit')
   try {
     const [rows] = await db.execute(
       'CALL get_exercises_with_muscles()'
     );
-    console.log("rows:")
-    console.log(rows[0])
     return rows[0]
   }
   catch (err) {
@@ -235,15 +217,13 @@ async function getExercises() {
   }
 };
 
-async function getWorkout(userId, workoutName) {
+async function getWorkouts(userId) {
   try {
     const [rows] = await db.execute(
-      'CALL get_workout_details(?,?)',
-      [userId, workoutName]
+      'CALL get_workout_summaries(?)',
+      [userId]
     );
-      console.log("workout rows:")
-      console.log(rows)
-      return rows[0]
+      return rows
   }
   catch (err) {
     throw err
@@ -253,12 +233,23 @@ async function getWorkout(userId, workoutName) {
 async function addWorkout(userId, workoutName, exerciseList) {
   try {
     const [rows] = await db.execute(
-      `INSERT INTO user_workout (user_id, name) \
-       VALUES (${userId} ${workoutName})`
+      'CALL add_workout(?,?,?)',
+      [userId, workoutName, JSON.stringify(exerciseList)]
     );
-    console.log("rows:")
-    console.log(rows[0])
-    return rows[0]
+    return rows
+  }
+  catch (err) {
+    throw err
+  }
+};
+
+async function updateWorkout(userId, workoutId, workoutName, exerciseList) {
+  try {
+    const [rows] = await db.execute(
+      'CALL update_workout(?,?,?,?)',
+      [userId, workoutId, workoutName, JSON.stringify(exerciseList)]
+    );
+    return rows
   }
   catch (err) {
     throw err
@@ -278,6 +269,9 @@ module.exports = {
   getDurations,
   getRecentWeight,
   getExercises,
-  getWorkout,
-  addWorkout
+  getWorkouts,
+  addWorkout,
+  getUsername,
+  getUserImage,
+  updateWorkout
 };

@@ -11,7 +11,10 @@ export default function UpdateWeightPopup(props) {
     const [weightError, setWeightError] = useState('');
     const [dateError, setDateError] = useState('');
   
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+      setDate(curDate)
+      setShow(true);
+    }
     const handleClose = () => {
         setShow(false);
         setWeightError('');

@@ -8,6 +8,8 @@ import UpdateWeightPopup from "../UpdateWeightPopup/UpdateWeightPopup";
 import home from './ProgressPage.module.css'
 import WokoutForm from './WorkoutForm'
 import WorkoutForm from "./WorkoutForm";
+import WorkoutPopup from "./WorkoutPopup";
+import ProgressCalendar from './ProgressCalendar.js'
 
 
 function ProgressPage() {
@@ -18,6 +20,51 @@ function ProgressPage() {
   const [workout, setWorkout] = useState('');
   const [workoutError, setWorkoutError] = useState('')
   const curDate = new Date().toLocaleDateString('fr-CA')
+
+  const [editableWorkout, setEditableWorkout] = useState({
+    id: 13,
+    name: "name",
+    exercises: [
+      {
+        id: 1,
+        name: "Bench Press",
+        weight: "150",
+        sets: "3",
+        reps: "10"
+      },
+      {
+        id: 2,
+        name: "Squats",
+        weight: "180",
+        sets: "3",
+        reps: "8"
+      }
+    ]
+  });
+
+  const [loggedWorkout, setLoggedWorkout] = useState({
+    id: 13,
+    name: "name",
+    date: '12/06/23',
+    exercises: [
+      {
+        id: 1,
+        name: "Bench Press",
+        weight: "150",
+        sets: "3",
+        reps: "10"
+      },
+      {
+        id: 2,
+        name: "Squats",
+        weight: "180",
+        sets: "3",
+        reps: "8"
+      }
+    ],
+  });
+
+  const [emptyWorkout, setEmptyWorkout] = useState({})
 
   const handleLogWorkout = (event) => {
     event.preventDefault()
@@ -42,7 +89,7 @@ function ProgressPage() {
   };
 
   return (
-    <div className={"d-flex justify-content-center align-items-center w-auto p-3 " + home.body}>
+    <div className={"d-flex justify-content-center align-items-center p-3 " + home.body}>
       <Navbar />
       <form
         onSubmit={handleLogWorkout}
@@ -80,16 +127,43 @@ function ProgressPage() {
             setWorkoutError('');
             }}
         >
-        <option >
-            text
-        </option>
-        {/* generate list of workouts from retrieved list */}
+          <option >
+              text
+          </option>
+          {/* generate list of workouts from retrieved list */}
         </select>
         <button type="submit" className="btn btn-primary form-control">
             Log Workout
         </button>
+        <WorkoutPopup
+          className="btn btn-primary form-control"
+          title="Add New Workout"
+          mode={"add"}
+          workout={emptyWorkout}
+          setWorkout={setEmptyWorkout}
+        />
+        <WorkoutPopup
+          className="btn btn-primary form-control"
+          title={`Edit Workout: ${editableWorkout.name}`}
+          workout={editableWorkout}
+          setWorkout={setEditableWorkout}
+          mode={"edit"}
+        />
+        <WorkoutPopup
+          className="btn btn-primary form-control"
+          title={`Edit Log: ${loggedWorkout.name} on ${loggedWorkout.date}`}
+          workout={loggedWorkout}
+          setWorkout={setLoggedWorkout}
+          mode={"edit-log"}
+        />
+        <WorkoutPopup
+          className="btn btn-primary form-control"
+          title={"Log a Workout"}
+          workout={editableWorkout}
+          setWorkout={setLoggedWorkout}
+          mode={"log"}
+        />
       </form>
-      <WorkoutForm/>
     </div>
   );
 }

@@ -21,13 +21,4 @@
 .exerciseDetails {
     flex-grow: 1;
 }
-
-.deleteButton {
-    color: red;
-    background-color: inherit;
-    width: auto;
-    justify-content: right;
-    padding: 0;
-    cursor: pointer;
-}
   

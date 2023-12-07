@@ -13,6 +13,7 @@ function Navbar() {
 
       const response = await fetch("/api/signout", {
         method: "POST",
+        mode: "cors",
         headers: {
           'Content-Type': 'application/json'
         },
@@ -59,7 +60,7 @@ function Navbar() {
       >
         Suggest a Workout
       </Link>
-      <DropdownButton title="Profile" className={navbar.dropdown} bsPrefix={navbar.dropdownButton + (url === "/settings" ? " "+navbar.active : "")}>
+      <DropdownButton title="Profile" className={navbar.dropdown} bsPrefix={navbar.navLink + (url === "/settings" ? " "+navbar.active : "")}>
         <Link
           to="/settings"
           className={navbar.navLink}

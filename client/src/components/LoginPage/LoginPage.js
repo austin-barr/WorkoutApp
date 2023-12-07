@@ -25,6 +25,7 @@ function LoginPage() {
     try {
       const response = await fetch("/api/login", {
         method: "POST",
+        mode: "cors",
         headers: {
           'Content-Type': 'application/json'
         },

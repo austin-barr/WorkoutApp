@@ -17,7 +17,6 @@ function HomePage() {
 
   const getWeight = async () => {
     console.log("getWeight called")
-    console.log(curDate)
     const data = {
       date: curDate
     }
@@ -37,7 +36,6 @@ function HomePage() {
           return;
       }
       const responseData = await response.json();
-      console.log(responseData.rows);
       if (responseData.rows[0] !== undefined)
         setWeight(responseData.rows[0].weight + " lbs")
       else
