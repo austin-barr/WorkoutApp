@@ -68,10 +68,31 @@ function LoginPage() {
       return isValid
     }
 
+  const handleTestClick = async (event) => {
+    event.preventDefault();
+    try {
+      const result = await fetch('api/test', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({n: 1})
+      })
+
+      const resultData = await result.json();
+      console.log(resultData)
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <div className={"id-flex justify-content-center align-items-center " + login.body} >
       <form className="form-container">
         <h1>Big Fellas</h1>
+        {/* <button onClick={(event) => handleTestClick(event)}>Test</button> */}
         <div className="p-4">
           <div className="form-group">
             <label class = "text-primary">Username:</label>

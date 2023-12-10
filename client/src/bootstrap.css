@@ -2166,6 +2166,11 @@ progress {
   width: 100%;
   max-width: 500px;
 }
+
+.form-control[type=button]:hover {
+  /* try to fix button stuff? */
+}
+
 @media (prefers-reduced-motion: reduce) {
   .form-control {
     transition: none;

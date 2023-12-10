@@ -215,12 +215,12 @@ export default function WorkoutPopup(props) {
         isValid = false
     }
 
-    if (!sets.trim()) {
+    if (!sets) {
         setSetsError('Sets is required')
         isValid = false
     }
 
-    if (!weight.trim()) {
+    if (!weight) {
         setRepsError('Reps is required')
         isValid = false
     }
@@ -323,6 +323,10 @@ export default function WorkoutPopup(props) {
 
   };
 
+  const handleEditLogWorkout = () => {
+
+  };
+
   const handleSelectWorkout = (index) => {
     const workout = workoutList[index]
     console.log(workout);
@@ -355,13 +359,7 @@ export default function WorkoutPopup(props) {
     return (
       <>
         <Button variant="primary" onClick={handleShow} className={props.className}>
-          {props.buttonText ? props.buttonText
-            : props.mode==='add' ? 'Save New Workout'
-            : props.mode==='edit' ? 'Save Changes'
-            : props.mode==='edit-log' ? 'Update Log'
-            : props.mode==='log' ? 'Log Workout'
-            : 'Save'
-          }
+          {props.buttonText}
         </Button>
 
         <Modal show={show}
@@ -545,7 +543,11 @@ export default function WorkoutPopup(props) {
                 <Button variant="primary" onClick={handleEditWorkout} className="btn btn-primary form-control" >
                   Save Changes
                 </Button>
-              :
+              : props.mode==='edit-log' ?
+                <Button variant="primary" onClick={handleEditLogWorkout} className="btn btn-primary form-control" >
+                  Update Log
+                </Button>
+              : props.mode==='add' &&
                 <Button variant="primary" onClick={handleAddWorkout} className="btn btn-primary form-control" >
                   Save New Workout
                 </Button>

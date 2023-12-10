@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 
 async function getSession(jwt) {
   try {
-      const rows = await db.execute('SELECT * FROM user_session WHERE jwt=?', [jwt])
+      const rows = await db.query('SELECT * FROM user_session WHERE jwt=?', [jwt])
       const sessionId = rows[0].id
 
       if (sessionId) {
@@ -20,7 +20,7 @@ async function createSession(userId, jwt) {
   try {
       if (userId) {
 
-          const sessionResult =  await db.execute('INSERT INTO user_session (jwt, user_id) VALUES (?, ?);', [jwt, userId]);
+          const sessionResult =  await db.query('INSERT INTO user_session (jwt, user_id) VALUES (?, ?);', [jwt, userId]);
 
           if (sessionResult) {
               return { success: true, sessionID: sessionResult.insertId };
@@ -37,7 +37,7 @@ async function createSession(userId, jwt) {
 
 async function removeSession(jwt) {
   try {
-      const sessionResult =  await db.execute('DELETE FROM user_session WHERE jwt=?;', [jwt]);
+      const sessionResult =  await db.query('DELETE FROM user_session WHERE jwt=?;', [jwt]);
 
       if (sessionResult) {
           return { success: true, result: sessionResult };
@@ -54,11 +54,11 @@ async function createUser(userData, imagePth) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-      const [rows] = await db.execute(
-          'CALL add_user_with_weight(?,?,?,?,?,?,?,?,@user_id)',
+      const [rows] = await db.query(
+          'CALL add_user_with_weight(?,?,?,?,?,?,?,?,@user_id); SELECT @user_id;',
           [username, hashedPassword, email, phoneNumber, birthDate, imagePth, curWeight, curDate]
       );
-        const user_id = rows[0][0].user_id;
+      const user_id = rows[1][0]['@user_id'];
       return user_id
     }
     catch (err) {
@@ -67,7 +67,7 @@ async function createUser(userData, imagePth) {
 }
 
 async function changeUserImage(userId, imagePth) {
-  const [rows] = await db.execute(
+  const [rows] = await db.query(
       'UPDATE user SET image=? WHERE id=?',
       [imagePth, userId]
   );
@@ -78,7 +78,7 @@ async function changeUserImage(userId, imagePth) {
 
 async function verifyLogin(username, password) {
   try {
-    const [rows] = await db.execute('SELECT id, password FROM user WHERE username = ?', [username]);
+    const [rows] = await db.query('SELECT id, password FROM user WHERE username = ?', [username]);
     if (rows[0] !== undefined) {
       const dbPassword = rows[0].password;
       const passwordMatch = await bcrypt.compare(password, dbPassword);
@@ -93,7 +93,7 @@ async function verifyLogin(username, password) {
 
 async function getUserByUsername(username) {
   try {
-    const [rows] = await db.execute(
+    const [rows] = await db.query(
       'SELECT * FROM user WHERE username=?',
       [username]
     );
@@ -106,7 +106,7 @@ async function getUserByUsername(username) {
 async function getUsername(userID) {
   
   try {
-    const [rows] = await db.execute(
+    const [rows] = await db.query(
       'SELECT username FROM user WHERE id=?',
       [userID]
     );
@@ -122,7 +122,7 @@ async function getUserImage(userId) {
   console.log("break")
   console.log(userId)
   try {
-    const [rows] = await db.execute(
+    const [rows] = await db.query(
       "SELECT image FROM user WHERE id=?" ,
       [userId]
     );
@@ -137,12 +137,12 @@ async function getUserImage(userId) {
 
 async function logWeight(userId, date, weight) {
   try {
-    const existingRows = await db.execute(
+    const existingRows = await db.query(
       'SELECT * FROM user_weights WHERE user_id=? AND date=?',
       [userId, date]
     );
     if (existingRows[0].length == 0) {
-      const insertResult = await db.execute(
+      const insertResult = await db.query(
         'INSERT INTO user_weights (user_id, date, weight) VALUES (?, ?, ?)',
         [userId, date, weight]
       );
@@ -152,7 +152,7 @@ async function logWeight(userId, date, weight) {
     }
     else {
       // ask to confirm overwrite??
-      const updateResult = await db.execute(
+      const updateResult = await db.query(
         'UPDATE user_weights SET weight=? WHERE user_id=? AND date=?',
         [weight, userId, date]
       )
@@ -168,7 +168,7 @@ async function logWeight(userId, date, weight) {
 
 async function getRecentWeight(userId, date) {
   try {
-    const [rows] = await db.execute(
+    const [rows] = await db.query(
       'CALL get_recent_weight(?, ?)',
       [userId, date]
     );
@@ -181,7 +181,7 @@ async function getRecentWeight(userId, date) {
 
 async function getWeights(userId, startDate, endDate) {
   try {
-    const [rows] = await db.execute(
+    const [rows] = await db.query(
       'SELECT DATE_FORMAT(date, \'%Y-%m-%d\') AS date, weight FROM user_weights WHERE user_id=? AND date>=? AND date<=? ORDER BY date',
       [userId, startDate, endDate]
     );
@@ -194,7 +194,7 @@ async function getWeights(userId, startDate, endDate) {
 
 async function getDurations(userId, startDate, endDate) {
   try {
-    const [rows] = await db.execute(
+    const [rows] = await db.query(
       'CALL get_logged_workout_duration_by_day(?,?,?)',
       [userId, startDate, endDate]
     );
@@ -207,7 +207,7 @@ async function getDurations(userId, startDate, endDate) {
 
 async function getExercises() {
   try {
-    const [rows] = await db.execute(
+    const [rows] = await db.query(
       'CALL get_exercises_with_muscles()'
     );
     return rows[0]
@@ -219,7 +219,7 @@ async function getExercises() {
 
 async function getWorkouts(userId) {
   try {
-    const [rows] = await db.execute(
+    const [rows] = await db.query(
       'CALL get_workout_summaries(?)',
       [userId]
     );
@@ -232,7 +232,7 @@ async function getWorkouts(userId) {
 
 async function addWorkout(userId, workoutName, exerciseList) {
   try {
-    const [rows] = await db.execute(
+    const [rows] = await db.query(
       'CALL add_workout(?,?,?)',
       [userId, workoutName, JSON.stringify(exerciseList)]
     );
@@ -245,7 +245,7 @@ async function addWorkout(userId, workoutName, exerciseList) {
 
 async function updateWorkout(userId, workoutId, workoutName, exerciseList) {
   try {
-    const [rows] = await db.execute(
+    const [rows] = await db.query(
       'CALL update_workout(?,?,?,?)',
       [userId, workoutId, workoutName, JSON.stringify(exerciseList)]
     );
@@ -255,6 +255,22 @@ async function updateWorkout(userId, workoutId, workoutName, exerciseList) {
     throw err
   }
 };
+
+async function test(n) {
+  try {
+    const result = await db.query(
+      'CALL p(?, @n2); SELECT @n2;',
+      [n]
+    );
+    console.log(result)
+    const n2 = result[0][1][0]['@n2']
+    console.log(n2)
+    return n2
+  }
+  catch (err) {
+    throw err
+  }
+}
 
 module.exports = {
   createUser,
@@ -273,5 +289,6 @@ module.exports = {
   addWorkout,
   getUsername,
   getUserImage,
-  updateWorkout
+  updateWorkout,
+  test
 };

@@ -92,52 +92,16 @@ function ProgressPage() {
     <div className={"d-flex justify-content-center align-items-center p-3 " + home.body}>
       <Navbar />
       <form
-        onSubmit={handleLogWorkout}
         className="h-100 d-flex flex-column justify-content-center align-items-center"
         style={{
           backgroundColor: "rgba(255, 255, 255, 0.8)",
           padding: "25px",
         }}
       >
-        <input
-            type="date"
-            className="form-control"
-            id="date"
-            value={date}
-            onChange={(event) => {
-            setDate(event.target.value);
-            setDateError('');
-            }}
-        />
-        <input
-            type="text"
-            className="form-control"
-            id="duration"
-            value={duration}
-            onChange={(event) => {
-            setDuration(event.target.value);
-            setDurationError('');
-            }}
-        />
-        <select
-            className="form-control"
-            value="workoutName"
-            onChange={(event) => {
-            setWorkout(event.target.value);
-            setWorkoutError('');
-            }}
-        >
-          <option >
-              text
-          </option>
-          {/* generate list of workouts from retrieved list */}
-        </select>
-        <button type="submit" className="btn btn-primary form-control">
-            Log Workout
-        </button>
         <WorkoutPopup
           className="btn btn-primary form-control"
           title="Add New Workout"
+          buttonText="Add Workout"
           mode={"add"}
           workout={emptyWorkout}
           setWorkout={setEmptyWorkout}
@@ -145,6 +109,7 @@ function ProgressPage() {
         <WorkoutPopup
           className="btn btn-primary form-control"
           title={`Edit Workout: ${editableWorkout.name}`}
+          buttonText="Edit Workout"
           workout={editableWorkout}
           setWorkout={setEditableWorkout}
           mode={"edit"}
@@ -152,6 +117,7 @@ function ProgressPage() {
         <WorkoutPopup
           className="btn btn-primary form-control"
           title={`Edit Log: ${loggedWorkout.name} on ${loggedWorkout.date}`}
+          buttonText="Edit Logged Workout"
           workout={loggedWorkout}
           setWorkout={setLoggedWorkout}
           mode={"edit-log"}
@@ -159,6 +125,7 @@ function ProgressPage() {
         <WorkoutPopup
           className="btn btn-primary form-control"
           title={"Log a Workout"}
+          buttonText="Log Workout"
           workout={editableWorkout}
           setWorkout={setLoggedWorkout}
           mode={"log"}

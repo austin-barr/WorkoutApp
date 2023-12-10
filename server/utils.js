@@ -1,5 +1,5 @@
 const express = require('express')
-const { changeUserImage, getUserByUsername, removeSession, getSession, logWeight, getWeights, getDurations, getRecentWeight, getExercises, addWorkout, getWorkouts, updateWorkout } = require('./database/queries')
+const { changeUserImage, getUserByUsername, removeSession, getSession, logWeight, getWeights, getDurations, getRecentWeight, getExercises, addWorkout, getWorkouts, updateWorkout, test } = require('./database/queries')
 const router = express.Router();
 const multer = require('multer');
 const {verifyJwt} = require('./verifyJwt')
@@ -266,7 +266,7 @@ router.post('/update/workout', verifyJwt, async (req, res) => {
         console.log("update workout result:")
         console.log(result)
         if (result !== undefined) {
-            res.json({"result": result})
+            res.json({result: result})
         }
         else {
             res.status(500).json({error: "Internal server error"})
@@ -295,5 +295,17 @@ router.post('/update/workout', verifyJwt, async (req, res) => {
 //         console.log(err)
 //     }
 // });
+
+router.post('/test', async (req, res) => {
+    const n = req.body.n
+    try {
+        const n2 = await test(n)
+        res.status(200).json({n2: n2})
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({error: 'Internal server error'})
+    }
+})
 
 module.exports = router;

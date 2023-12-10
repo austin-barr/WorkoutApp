@@ -1,7 +1,7 @@
-const mysql = require('mysql2');
+const mariadb = require('mysql2');
 
 try {
-  db = mysql.createPool({
+  db = mariadb.createPool({
     host: '192.168.56.101',
     user: 'webAppUser',
     password: 'r0ckandst0ne',
