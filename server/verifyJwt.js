@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
+require('dotenv').config();
 // const { removeSession, getSession } = require('./database/queries');
 
 async function verifyJwt(req, res, next) {
