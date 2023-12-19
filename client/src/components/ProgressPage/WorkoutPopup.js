@@ -14,6 +14,8 @@ export default function WorkoutPopup(props) {
   const [editingExerciseIndex, setEditingExerciseIndex] = useState()
   const [workoutName, setWorkoutName] = useState('');
   const [date, setDate] = useState(props.defaultDate || curDate);
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
   const [dateError, setDateError] = useState('');
   const [selectedExercise, setSelectedExercise] = useState('');
   const [weight, setWeight] = useState('');
@@ -132,7 +134,20 @@ export default function WorkoutPopup(props) {
       console.log(err)
     }
   };
-  
+
+  const to24Hour = (timeString) => {
+    let [hour, end] = timeString.split(':')
+    const [minute, ampm] = end.split(' ')
+
+    if (ampm === 'PM' && hour < 12) {
+      hour = String(Number(hour) + 12)
+    }
+    else if (hour === '12') {
+      hour = "00"
+    }
+
+    return `${hour}:${minute}`
+  }
 
   const loadWorkout = (workout) => {
     console.log('set')
@@ -141,6 +156,14 @@ export default function WorkoutPopup(props) {
       setAddedExerciseList([...workout.exercises]);
       if (props.mode!=='add') {
         setWorkoutName(workout.name)
+        console.log('props')
+        console.log(props)
+        if (props.workout.startTime) {
+          console.log('time exists')
+          setStartTime(to24Hour(props.workout.startTime))
+          setEndTime(to24Hour(props.workout.endTime))
+          setDate(props.workout.date)
+        }
       }
     }
     else {
@@ -163,6 +186,9 @@ export default function WorkoutPopup(props) {
       sets: sets,
       reps: reps,
     };
+    console.log('new:')
+    console.log(newExercise)
+    console.log(selectedExercise)
     setAddedExerciseList([...addedExerciseList, newExercise]);
 
     clearExerciseInputs();
@@ -197,7 +223,11 @@ export default function WorkoutPopup(props) {
         setWorkoutNameError('Workout name is required')
         isValid = false
     }
-    // check if workout name exists in database for this user
+    // if add check that workout doesn't already exist
+    // if edit no check since it uses the one that was passed into it
+    // if log names can be the same but could check if there is already a log for that time?
+
+    // if logging or editing a log the date and times and whatever need to be checked
 
     return isValid
   }
@@ -264,6 +294,7 @@ export default function WorkoutPopup(props) {
           return;
       }
 
+      props.onSave();
       handleClose();
 
     }
@@ -280,7 +311,6 @@ export default function WorkoutPopup(props) {
     }
     
     const workout = {
-      id: props.workout.id,
       name: workoutName,
       exercises: [addedExerciseList.map((ex, index) => (
           {
@@ -311,6 +341,7 @@ export default function WorkoutPopup(props) {
           return;
       }
 
+      props.onSave();
       handleClose();
 
     }
@@ -319,12 +350,100 @@ export default function WorkoutPopup(props) {
     }
   };
 
-  const handleLogWorkout = () => {
+  const handleLog = async () => {
+    if (!validateWorkoutInput()) {
+      return;
+    }
+    
+    const log = {
+      name: workoutName,
+      date: date,
+      startTime: startTime,
+      endTime: endTime,
+      exercises: [addedExerciseList.map((ex, index) => (
+          {
+            id: ex.id,
+            step: index + 1,
+            weight: ex.weight,
+            sets: ex.sets,
+            reps: ex.reps
+          }
+        ))
+      ]
+    };
+    console.log(addedExerciseList)
+    console.log(log)
 
+    try {
+      const response = await fetch('/api/add/log', {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(log)
+      });
+  
+      if (!response.ok) {
+          console.error(`Error: ${response.statusText}`);
+          return;
+      }
+
+      props.onSave();
+      handleClose();
+
+    }
+    catch (err) {
+      console.log(err)
+    }
   };
 
-  const handleEditLogWorkout = () => {
+  const handleEditLog = async () => {
+    if (!validateWorkoutInput()) {
+      return;
+    }
+    
+    const log = {
+      id: props.workout.id,
+      name: workoutName,
+      date: date,
+      startTime: startTime,
+      endTime: endTime,
+      exercises: [addedExerciseList.map((ex, index) => (
+          {
+            id: ex.id,
+            step: index + 1,
+            weight: ex.weight,
+            sets: ex.sets,
+            reps: ex.reps
+          }
+        ))
+      ]
+    };
+    console.log(log)
+ 
+    try {
+      const response = await fetch('/api/update/log', {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(log)
+      });
+  
+      if (!response.ok) {
+          console.error(`Error: ${response.statusText}`);
+          return;
+      }
+      
+      props.onSave();
+      handleClose();
 
+    }
+    catch (err) {
+      console.log(err)
+    }
   };
 
   const handleSelectWorkout = (index) => {
@@ -442,16 +561,16 @@ export default function WorkoutPopup(props) {
                   <div className={popup.dates}>
                     <Form.Control
                       type="time"
-                      // value={}
+                      value={startTime}
                       onChange={(event) => {
-                        //set start time
+                        setStartTime(event.target.value)
                       }}
                     />
                     <Form.Control
                       type="time"
-                      // value={}
+                      value={endTime}
                       onChange={(event) => {
-                        //set end time
+                        setEndTime(event.target.value)
                       }}
                     />
                   </div>
@@ -536,7 +655,7 @@ export default function WorkoutPopup(props) {
           </Modal.Body>
           <Modal.Footer>
             {props.mode==="log" ?
-                <Button variant="primary" onClick={handleLogWorkout} className="btn btn-primary form-control" >
+                <Button variant="primary" onClick={handleLog} className="btn btn-primary form-control" >
                   Log
                 </Button>
               : props.mode==="edit" ?
@@ -544,7 +663,7 @@ export default function WorkoutPopup(props) {
                   Save Changes
                 </Button>
               : props.mode==='edit-log' ?
-                <Button variant="primary" onClick={handleEditLogWorkout} className="btn btn-primary form-control" >
+                <Button variant="primary" onClick={handleEditLog} className="btn btn-primary form-control" >
                   Update Log
                 </Button>
               : props.mode==='add' &&

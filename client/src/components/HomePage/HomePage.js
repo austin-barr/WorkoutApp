@@ -7,7 +7,6 @@ import DurationGraph from "../DurationGraph/DurationGraph";
 import UpdateWeightPopup from "../UpdateWeightPopup/UpdateWeightPopup";
 import home from './HomePage.module.css'
 
-
 function HomePage() {
   const [weight, setWeight] = useState('');
   const [weightInput, setWeightInput] = useState({})
@@ -96,7 +95,7 @@ function HomePage() {
       }
     };
 
-  const handleLogWorkout = (event) => {
+  const handleLog = (event) => {
     event.preventDefault()
 
     console.log("workout pressed");
@@ -157,7 +156,7 @@ function HomePage() {
               <div>
                 <button 
                   onClick={(event) => {
-                    handleLogWorkout(event)
+                    handleLog(event)
                   }}
                   id="workout-button"
                   className={"btn btn-primary form-control " + home.tableItem}

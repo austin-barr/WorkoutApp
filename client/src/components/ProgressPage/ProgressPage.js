@@ -6,19 +6,13 @@ import WeightGraph from "../WeightGraph/WeightGraph";
 import DurationGraph from "../DurationGraph/DurationGraph";
 import UpdateWeightPopup from "../UpdateWeightPopup/UpdateWeightPopup";
 import home from './ProgressPage.module.css'
-import WokoutForm from './WorkoutForm'
-import WorkoutForm from "./WorkoutForm";
+import WokoutForm from './WorkoutForm';
 import WorkoutPopup from "./WorkoutPopup";
-import ProgressCalendar from './ProgressCalendar.js'
+import ProgressCalendar from '../ProgressCalendar/ProgressCalendar.js'
 
 
 function ProgressPage() {
-  const [date, setDate] = useState('');
-  const [dateError, setDateError] = useState('')
-  const [duration, setDuration] = useState('');
-  const [durationError, setDurationError] = useState('')
-  const [workout, setWorkout] = useState('');
-  const [workoutError, setWorkoutError] = useState('')
+  const [changeToReloadCalendar, setChangeToReloadCalendar] = useState(false)
   const curDate = new Date().toLocaleDateString('fr-CA')
 
   const [editableWorkout, setEditableWorkout] = useState({
@@ -42,8 +36,8 @@ function ProgressPage() {
     ]
   });
 
-  const [loggedWorkout, setLoggedWorkout] = useState({
-    id: 13,
+  const [log, setLog] = useState({
+    id: 1,
     name: "name",
     date: '12/06/23',
     exercises: [
@@ -66,10 +60,9 @@ function ProgressPage() {
 
   const [emptyWorkout, setEmptyWorkout] = useState({})
 
-  const handleLogWorkout = (event) => {
-    event.preventDefault()
-    console.log('handle log workout')
-  };
+  const onSave = () => {
+    setChangeToReloadCalendar(!changeToReloadCalendar)
+  }
 
   const formatDate = (date) => {
     let dd = String(date.getDate()).padStart(2, "0");
@@ -104,33 +97,34 @@ function ProgressPage() {
           buttonText="Add Workout"
           mode={"add"}
           workout={emptyWorkout}
-          setWorkout={setEmptyWorkout}
+          onSave={onSave}
         />
         <WorkoutPopup
           className="btn btn-primary form-control"
           title={`Edit Workout: ${editableWorkout.name}`}
           buttonText="Edit Workout"
           workout={editableWorkout}
-          setWorkout={setEditableWorkout}
           mode={"edit"}
+          onSave={onSave}
         />
         <WorkoutPopup
           className="btn btn-primary form-control"
-          title={`Edit Log: ${loggedWorkout.name} on ${loggedWorkout.date}`}
-          buttonText="Edit Logged Workout"
-          workout={loggedWorkout}
-          setWorkout={setLoggedWorkout}
+          title={`Edit Log: ${log.name} on ${log.date}`}
+          buttonText="Edit Log"
+          workout={log}
           mode={"edit-log"}
+          onSave={onSave}
         />
         <WorkoutPopup
           className="btn btn-primary form-control"
           title={"Log a Workout"}
           buttonText="Log Workout"
-          workout={editableWorkout}
-          setWorkout={setLoggedWorkout}
+          workout={log}
           mode={"log"}
+          onSave={onSave}
         />
       </form>
+      <ProgressCalendar changeToReload={changeToReloadCalendar}/>
     </div>
   );
 }

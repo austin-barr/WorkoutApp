@@ -195,7 +195,7 @@ async function getWeights(userId, startDate, endDate) {
 async function getDurations(userId, startDate, endDate) {
   try {
     const [rows] = await db.query(
-      'CALL get_logged_workout_duration_by_day(?,?,?)',
+      'CALL get_log_duration_by_day(?,?,?)',
       [userId, startDate, endDate]
     );
     return rows[0]
@@ -230,6 +230,19 @@ async function getWorkouts(userId) {
   }
 };
 
+async function getLogs(userId, startDate, endDate) {
+  try {
+    const [rows] = await db.query(
+      'CALL get_logs(?,?,?)',
+      [userId, startDate, endDate]
+    );
+      return rows
+  }
+  catch (err) {
+    throw err
+  }
+};
+
 async function addWorkout(userId, workoutName, exerciseList) {
   try {
     const [rows] = await db.query(
@@ -243,11 +256,37 @@ async function addWorkout(userId, workoutName, exerciseList) {
   }
 };
 
+async function addLog(userId, workoutName, date, startTime, endTime, exerciseList) {
+  try {
+    const [rows] = await db.query(
+      'CALL log_workout(?,?,?,?,?,?)',
+      [userId, workoutName, date, startTime, endTime, JSON.stringify(exerciseList)]
+    );
+    return rows
+  }
+  catch (err) {
+    throw err
+  }
+};
+
 async function updateWorkout(userId, workoutId, workoutName, exerciseList) {
   try {
     const [rows] = await db.query(
       'CALL update_workout(?,?,?,?)',
       [userId, workoutId, workoutName, JSON.stringify(exerciseList)]
+    );
+    return rows
+  }
+  catch (err) {
+    throw err
+  }
+};
+
+async function updateLog(userId, workoutId, workoutName, date, startTime, endTime, exerciseList) {
+  try {
+    const [rows] = await db.query(
+      'CALL update_log(?,?,?,?,?,?,?)',
+      [userId, workoutId, workoutName, date, startTime, endTime, JSON.stringify(exerciseList)]
     );
     return rows
   }
@@ -290,5 +329,8 @@ module.exports = {
   getUsername,
   getUserImage,
   updateWorkout,
-  test
+  test,
+  addLog,
+  updateLog,
+  getLogs,
 };
