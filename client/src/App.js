@@ -5,10 +5,11 @@ import SignUpPage from "./components/SignUpPage/SignUpPage";
 import HomePage from "./components/HomePage/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import './bootstrap.css'
-// import SettingsPage from "./components/SettingsPage/SettingsPage";
+import SettingsPage from "./components/SettingsPage/SettingsPage";
 import ProgressPage from "./components/ProgressPage/ProgressPage";
 import WorkoutPage from "./components/WorkoutPage/WorkoutPage";
 import TempPage from './components/TempPage/TempPage';
+import ExercisePage from './components/ExercisePage/ExercisePage';
 
 // App.js
 function App() {
@@ -20,9 +21,9 @@ function App() {
           <Route path="/register" element={<SignUpPage />} />
           <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
           <Route path="/progress" element={<ProtectedRoute><ProgressPage /></ProtectedRoute>} />
-          <Route path="/workouts" element={<ProtectedRoute><TempPage /></ProtectedRoute>} />
-          <Route path="/suggest-workout" element={<ProtectedRoute><TempPage /></ProtectedRoute>} />
-          <Route path="/settings" element={<ProtectedRoute><TempPage /></ProtectedRoute>} />
+          <Route path="/workouts" element={<ProtectedRoute><WorkoutPage /></ProtectedRoute>} />
+          <Route path="/exercises" element={<ProtectedRoute><ExercisePage /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

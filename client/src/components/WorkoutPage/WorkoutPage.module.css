@@ -1,0 +1,32 @@
+.body {
+  background-image: url("../../static/barbell.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4vh;
+  height: 96vh;
+  position: fixed;
+  width: 100%;
+}
+
+.container {
+  height: 90%;
+  display: grid;
+  grid-template-rows: auto 5fr 1fr;
+}
+
+.listContainer {
+  height: 100%;
+}
+
+.workoutListItem {
+  padding-left: 0;
+}
+
+.addContainer {
+  display: flex;
+  align-items: center;
+}

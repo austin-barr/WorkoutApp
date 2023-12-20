@@ -1,119 +1,122 @@
-import React from "react";
-import { startOfWeek, endOfWeek, format } from "date-fns";
-import Navbar from "../Navbar/Navbar";
-import WeightGraph from "../WeightGraph/WeightGraph";
-import DurationGraph from "../DurationGraph/DurationGraph";
-import UpdateWeightPopup from "../UpdateWeightPopup/UpdateWeightPopup";
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import { Link } from "react-router-dom";
+import Navbar from "../Navbar/Navbar.js";
+import ScrollableButtonList from "./ScrollableButtonList.js";
+import Button from "react-bootstrap/Button";
+// import Modal from "react-bootstrap/Modal";
+// import ModalTest from "../modal/modalTest.js";
+import ScrollableList from '../ScrollableList/ScrollableList'
 import workout from './WorkoutPage.module.css'
+import WorkoutPopup from "../ProgressPage/WorkoutPopup.js";
 
+const buttonData = [
+  "Button 1",
+  "Button 2",
+  "Button 3",
+  "Button 4",
+  "Button 5",
+  "Button 6",
+  "Button 7",
+];
 
-function WorkoutPage() {
+const MyWorkouts = () => {
+    const [workoutList, setWorkoutList] = useState([])
+    const [selectedWorkout, setSelectedWorkout] = useState()
 
-  const handleUpdateWeight = (event) => {
-    event.preventDefault()
+    const getWorkouts = async () => {
+      console.log('get called')
+      try {
+        const response = await fetch('/api/get/workouts', {
+            method: "GET"
+        });
+    
+        if (!response.ok) {
+            console.error(`Error: ${response.statusText}`);
+            return;
+        }
+        const responseData = await response.json();
+        
+        console.log('workout response')
+        console.log(responseData)
+        setWorkoutList(responseData.workouts)
+      }
+      catch (err) {
+        console.log(err)
+      }
+    };
 
-    console.log("weight pressed");
-  };
+    useEffect(() => {
+      console.log('use effect')
+      getWorkouts()
+    }, [])
+    
+    const makeElement = (wo) => {
+      return (
+        <div className={"btn btn-primary form-control " + workout.workoutListItem}>
+          {wo.name}
+        </div>
+      )
+    }
+    
+    const handleSelect = () => {
+      console.log('select')
+    }
+    
+    const handleUnselect = () => {
+      console.log('unselect')
+    }
 
-  const handleLogWorkout = (event) => {
-    event.preventDefault()
+  const [modalShow, setModalShow] = React.useState(false);
+  const [clicked, setClicked] = useState()
 
-    console.log("workout pressed");
-  };
+  const onSave = () => {
 
-  const formatDate = (date) => {
-    let dd = String(date.getDate()).padStart(2, "0");
-    let mm = String(date.getMonth() + 1).padStart(2, "0");
-    let yy = String(date.getFullYear()).slice(-2);
-
-    let fDate = mm + "/" + dd + "/" + yy;
-    return fDate;
-  };
-
-  const getDate = (date) => {
-    let today = new Date();
-    return formatDate(today);
-  };
-
-  const getWeek = () => {
-    let today = new Date();
-    let start = startOfWeek(today);
-    let end = endOfWeek(today);
-
-    return formatDate(start) + " - " + formatDate(end);
-  };
-
-  const getWeight = () => {
-    return "150 lbs";
-  };
-
-  const getDuration = () => {
-    return "120 min";
-  };
+  }
 
   return (
-    <div className={"d-flex justify-content-center align-items-center w-auto p-3 " + workout.body}>
+    <div className={workout.body}>
       <Navbar />
-      <form
-        className="h-100 d-flex flex-column justify-content-center align-items-center"
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          padding: "25px",
-        }}
-      >
-        <div id="grid-container" className="p4" data-bs-theme="dark">
-          <div>
-            <h1 id="today-header" className="h-100 d-inline-block">
-              Today ({getDate()}):
-            </h1>
-          </div>
-          <div id="main-panel">
-            <div id="table-container">
-              <label className="text-primary">Weight:</label>
-              <input
-                className="form-control"
-                id="weight"
-                style={{ color: "black" }}
-              />
-              <div id="weight-button-container" class="table-item">
-                <UpdateWeightPopup
-                  onClick={(event) => {
-                    handleUpdateWeight(event)
-                  }}
-                />
-              </div>
-              <label className="text-primary">Duration:</label>
-              <input
-                className="form-control"
-                id="duration"
-                style={{ color: "black" }}
-              />
-              <div id="workout-button-container" class="table-item">
-                <button
-                  onClick={(event) => {
-                    handleLogWorkout(event)
-                  }}
-                  id="workout-button"
-                  className="btn btn-primary"
-                >
-                  Log a Workout
-                </button>
-              </div>
-            </div>
-            <h1 id="week-header">This week ({getWeek()}):</h1>
-            <div id="graphs-container">
-              <div id="weight-graph-container">
-                <WeightGraph />
-              </div>
-              <div id="duration-graph-container">
-                <DurationGraph />
-              </div>
-            </div>
-          </div>
+      <form className={workout.container + " form-container"}>
+        <h2>My Workouts</h2>
+        <div className={workout.listContainer}>
+          {workoutList[0] ?
+            <ScrollableList
+              items={workoutList}
+              makeListElement={makeElement}
+              clickedIndex={clicked}
+              setClickedIndex={setClicked}
+              onSelect={handleSelect}
+              onUnselect={handleUnselect}
+            />
+          :
+            "No workouts saved"
+          } 
+        </div>
+        <div className={workout.addContainer}>
+          {selectedWorkout ? 
+            <WorkoutPopup
+              className="btn btn-primary form-control"
+              title="Add New Workout"
+              buttonText="Add Workout"
+              mode={"add"}
+              workout={{}}
+              onSave={onSave}
+            />
+          :
+            <WorkoutPopup
+              className="btn btn-primary form-control"
+              title="Add New Workout"
+              buttonText="Add Workout"
+              mode={"add"}
+              workout={{}}
+              onSave={onSave}
+            />
+          }
         </div>
       </form>
     </div>
   );
 }
 
-export default WorkoutPage;
+export default MyWorkouts;

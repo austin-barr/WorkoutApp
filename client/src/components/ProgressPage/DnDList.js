@@ -70,6 +70,7 @@ export default function DnDList(props) {
                 <Draggable key={index} draggableId={`item-${index}`} index={index}>
                   {(provided, snapshot) => (
                       <li
+                        key={index}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}

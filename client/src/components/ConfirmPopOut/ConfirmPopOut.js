@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 // import "../SettingsPage/SettingsPage.module.css";
-
+import './ConfirmPopOut.module.css'
 export default function ConfirmPopOut() {
     const [showModal, setShowModal] = useState(false);
 
@@ -12,7 +12,7 @@ export default function ConfirmPopOut() {
     }
 
     return (
-        <>
+            <div className = "body">
             <Button className="btn btn-danger"  onClick={() => setShowModal(true)}>
                 Delete Account
             </Button>
@@ -31,6 +31,6 @@ export default function ConfirmPopOut() {
                     </Button>
                 </Modal.Footer>
             </Modal>
-        </>
+        </div>
     );
 }

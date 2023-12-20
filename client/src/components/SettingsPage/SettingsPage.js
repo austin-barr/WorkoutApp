@@ -4,15 +4,12 @@ import React from "react";
 import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import Navbar from "../Navbar/Navbar";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import ConfirmPopOut from "../ConfirmPopOut/ConfirmPopOut";
 import ProfilePicUpload from "../ImageUploadPopOut/ImageUpload";
 import ChangePasswordPopOut from "../ChangePassword/ChangePassword";
 import PhoneNumberPopOut from "../PhoneNumberPopOut/PhoneNumber";
-// import "./SettingsPage.module.css";
 import ImageUpload from '../ImageUpload/ImageUpload';
-// import settings from './SettingsPage.module.css'
+import settings from './SettingsPage.module.css'
 
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
@@ -128,10 +125,9 @@ function SettingsPage() {
     console.log("getProfilePic called")
     try {
         const response = await fetch('/api/get/profilepic', {
-            method: "POST",
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage["token"]}`,
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
           },
       });
       if (!response.ok) {
@@ -148,39 +144,25 @@ function SettingsPage() {
     console.log(err)
   }
   }
-    return (
-      
-      
-        
-                        
-        <div className={"id-flex justify-content-center align-items-center " + settings.body} >
-              <Navbar />
+    return (   
+          <div className={"id-flex justify-content-center align-items-center " + settings.body} >
+            <Navbar />
             <form className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
-                
-                <center>
+              <center>
                 <img src={profilePic} alt="profile pic" className={"rounded-circle"} style={{width: '200px', height: '200px;'}}/>
                 <p class="h-2 ">{Username}</p>
-                </center>
-                <div className="p-4">
-                </div>  
-                <div>
-                 <ProfilePicUpload />
-                </div>
-                
-                <div>
-                  {/* <ChangePasswordPopOut /> */}
-                </div>
-                <div>
-                 <PhoneNumberPopOut />
-                </div>
-                
-                {/* <button onClick={deleteAccount} type="submit" className="btn btn-danger">Delete Account</button> */}
-                <div >
-                    <ConfirmPopOut />
-                 </div>                
-                
+              </center>
+              <div className="p-4">
+                p4 here
+              </div>  
+              <div className={settings.popups}>
+                <ProfilePicUpload />
+                <ChangePasswordPopOut />
+                <PhoneNumberPopOut />
+                <ConfirmPopOut />
+              </div>
             </form>
-            </div>
+          </div>
     );
 }
 

@@ -51,6 +51,7 @@ const Calendar = () => {
       })
 
       const logsResult = (await logsResponse.json()).logs
+      
       console.log('before sort')
       console.log(logsResult)
       logsResult.sort((a, b) => {
@@ -90,13 +91,11 @@ const Calendar = () => {
   }
 
   const handleLogSelect = (event, index) => {
-    console.log(logs[selectedDate][index])
     setSelectedLog(logs[selectedDate][index])
-    console.log(logs[selectedDate][index])
   }
 
   const handleLogUnselect = (event, index) => {
-    console.log(index)
+    setSelectedLog()
   }
 
   useEffect(() => {
@@ -135,6 +134,8 @@ const Calendar = () => {
   }
 
   const renderLogDetails = () => {
+    console.log('selected')
+    console.log(selectedLog)
     return (
       <div className={cal.logDetails}>
         <h2 className={cal.sidePanelHeader}>
@@ -144,6 +145,7 @@ const Calendar = () => {
           <ScrollableList
             items={logs[selectedDate]}
             makeListElement={makeLogListElement}
+            clickedIndex={clickedLogIndex}
             setClickedIndex={setClickedLogIndex}
             onSelect={handleLogSelect}
             onUnselect={handleLogUnselect}
@@ -156,7 +158,7 @@ const Calendar = () => {
           </div>
           // workout summary (total time, muscles used)
           // exercise list
-          // Edit selected exercuse button
+
         :
           "No logs"
           
@@ -170,6 +172,7 @@ const Calendar = () => {
   }
 
   const renderEditPopup = () => {
+    console.log(selectedLog)
     // log will be the one that is selected in the side panel
     return <WorkoutPopup
       className="btn btn-primary form-control"
@@ -233,7 +236,6 @@ const Calendar = () => {
         :
           "No popup"
         }
-        {clickedLogIndex !== undefined}
       </div>
     </div>
   );

@@ -67,13 +67,17 @@ async function createUser(userData, imagePth) {
 }
 
 async function changeUserImage(userId, imagePth) {
-  const [rows] = await db.query(
-      'UPDATE user SET image=? WHERE id=?',
-      [imagePth, userId]
-  );
+  try {
+    const [rows] = await db.query(
+        'UPDATE user SET image=? WHERE id=?',
+        [imagePth, userId]
+    );
 
-  return rows
-  // need error handling
+    return rows
+  }
+  catch (err) {
+    throw err
+  }
 }
 
 async function verifyLogin(username, password) {
@@ -220,7 +224,7 @@ async function getExercises() {
 async function getWorkouts(userId) {
   try {
     const [rows] = await db.query(
-      'CALL get_workout_summaries(?)',
+      'CALL get_workouts(?)',
       [userId]
     );
       return rows
@@ -236,7 +240,7 @@ async function getLogs(userId, startDate, endDate) {
       'CALL get_logs(?,?,?)',
       [userId, startDate, endDate]
     );
-      return rows
+    return rows
   }
   catch (err) {
     throw err

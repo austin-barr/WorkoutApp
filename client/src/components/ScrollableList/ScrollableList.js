@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import list from './ScrollableList.module.css'
 
-export default function DnDList(props) {
+export default function ScrollableList(props) {
 
     const handleItemClicked = (event, index) => {
       if (index != props.clickedIndex) {
@@ -14,13 +15,16 @@ export default function DnDList(props) {
     };
 
     return (
-      <ul className={props.listClass}>
+      <ul className={props.listClass + " " + list.list}>
         {props.items.map((item, index) => (
-          <li onClick={(event)=>handleItemClicked(event, index)}>
-          <div>
-            {props.makeListElement(item)}
-          </div>
-        </li>
+          <li
+            key={index}
+            onClick={(event)=>handleItemClicked(event, index)}
+          >
+            <div>
+              {props.makeListElement(item)}
+            </div>
+          </li>
         ))}
     </ul>
     );

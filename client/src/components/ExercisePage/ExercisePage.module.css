@@ -1,0 +1,46 @@
+.body {
+    background-image: url("../../static/barbell.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4vh;
+    height: 96vh;
+    position: fixed;
+    width: 100%;
+}
+
+.container {
+    height: 90%;
+    display: grid;
+    grid-template-rows: auto 1fr 1fr;
+}
+
+
+.listContainer {
+    height: 100%;
+}
+
+.list {
+    max-height: 60vh;
+    overflow-y: scroll;
+}
+
+.exerciseListItem {
+    padding-left: 0;
+    background-color: #666;
+    color: black;
+}
+
+.exerciseListItem.selected {
+    background-color: #333;
+    color: white;
+}
+
+.exerciseContainer {
+    height: 90%;
+    display: grid;
+    grid-template-rows: auto 5fr 1fr;
+}

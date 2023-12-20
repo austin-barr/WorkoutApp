@@ -55,10 +55,10 @@ function Navbar() {
         My Workouts
       </Link>
       <Link
-        to="/suggest-workout"
-        className={navbar.navLink + (url === "/suggest-workout" ? " "+navbar.active : "")}
+        to="/exercises"
+        className={navbar.navLink + (url === "/exercises" ? " "+navbar.active : "")}
       >
-        Suggest a Workout
+         View Exercises
       </Link>
       <DropdownButton title="Profile" className={navbar.dropdown} bsPrefix={navbar.navLink + (url === "/settings" ? " "+navbar.active : "")}>
         <Link

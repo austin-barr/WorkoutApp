@@ -1,5 +1,5 @@
 const express = require('express')
-const { changeUserImage, getUserByUsername, removeSession, getSession, logWeight, getWeights, getDurations, getRecentWeight, getExercises, addWorkout, addLog, getWorkouts, updateWorkout, updateLog, getLogs, test } = require('./database/queries')
+const { getUsername, getUserImage, changeUserImage, getUserByUsername, removeSession, getSession, logWeight, getWeights, getDurations, getRecentWeight, getExercises, addWorkout, addLog, getWorkouts, updateWorkout, updateLog, getLogs, test } = require('./database/queries')
 const router = express.Router();
 const multer = require('multer');
 const {verifyJwt} = require('./verifyJwt')
@@ -39,8 +39,19 @@ router.post('/get/profilepic', verifyJwt, async (req, res) => {
     }
 });
 router.post('/upload/user', verifyJwt, upload.single('file'), async (req, res) => {
-    const result = await changeUserImage(req.body.userId, req.file.filename)
-    // need response, try, errors, etc
+    try {
+        const result = await changeUserImage(req.body.userId, req.file.filename)
+        if (result) {
+            res.status(200)
+        }
+        else {
+            res.status(500).json({error: "Internal server error"})
+        }
+    }
+    catch (err) {
+        res.status(500).json({error: "Internal server error"})
+    }
+    
 });
 
 router.post('/lookup/username', async (req, res) => {
@@ -178,7 +189,13 @@ router.get('/get/exercises', verifyJwt, async (req, res) => {
 router.get('/get/workouts', verifyJwt, async (req, res) => {
     const userId = req.userId
     try {
-        let rows = (await getLogs(userId))[0];
+        let rows = (await getWorkouts(userId))[0];
+        console.log('workouts rows')
+        console.log(rows)
+
+        // const muscleTimes = (await getWorkoutMuscleTimes(userId))
+        // get time spent using each muscle group, each workout could have
+        // its top three groups or something
         
         let i = -1;
         if (rows) {
@@ -190,7 +207,8 @@ router.get('/get/workouts', verifyJwt, async (req, res) => {
                     seen.push(row.workout_id)
                     workouts[i] = {
                         name: row.workout_name,
-                        exercises: []
+                        exercises: [],
+                        estimatedTime: row.estimated_time
                     }
                 }
                 workouts[i].exercises.push({
@@ -203,7 +221,7 @@ router.get('/get/workouts', verifyJwt, async (req, res) => {
                     duration: row.duration_per_rep,
                 })
             }
-            // console.log(workouts.exercises)
+            console.log(workouts)
             res.status(200).json({workouts: workouts})
         }
         else {
@@ -239,6 +257,7 @@ router.post('/get/logs', verifyJwt, async (req, res) => {
                         date: row.date,
                         startTime: row.start_time,
                         endTime: row.end_time,
+                        duration: row.duration,
                         exercises: []
                     }
                 }
