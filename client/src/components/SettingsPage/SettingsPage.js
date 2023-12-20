@@ -1,5 +1,3 @@
-
-
 import React from "react";
 import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
@@ -32,6 +30,8 @@ function SettingsPage() {
     const [phoneNumberError, setPhoneNumberError] = useState('');
     const [birthDateError, setBirthDateError] = useState('');
     const [emailError, setEmailError] = useState('');
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
     const deleteAccount = (event) => {
         event.preventDefault();
     }
@@ -85,9 +85,6 @@ function SettingsPage() {
         console.log("Password: ", password);
         console.log("New Password: ", newPassword);
     };
-
-
-
 
     useEffect(() => {
         getUsername();
@@ -145,7 +142,7 @@ function SettingsPage() {
   }
   }
     return (   
-          <div className={"id-flex justify-content-center align-items-center " + settings.body} >
+          <div className={"id-flex justify-content-center align-items-center " + settings.body + " " + isDeleteOpen ? settings.delete : ""} >
             <Navbar />
             <form className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
               <center>
@@ -158,8 +155,8 @@ function SettingsPage() {
               <div className={settings.popups}>
                 <ProfilePicUpload />
                 <ChangePasswordPopOut />
-                <PhoneNumberPopOut />
-                <ConfirmPopOut />
+                <PhoneNumberPopOut phoneNumber=""/>
+                <ConfirmPopOut setIsOpen={setIsDeleteOpen}/>
               </div>
             </form>
           </div>

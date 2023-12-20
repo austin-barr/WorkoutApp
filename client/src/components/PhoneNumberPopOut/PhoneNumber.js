@@ -3,7 +3,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 // import "../SettingsPage/SettingsPage.module.css";
 
-export default function PhoneNumberPopOut() {
+const PhoneNumberPopOut = async (props)  => {
     const [showModal, setShowModal] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
 
@@ -13,7 +13,12 @@ export default function PhoneNumberPopOut() {
 
     const handleSubmit = async () => {
         try {
-            await axios.post('/api/phonenumber', { phoneNumber });
+            await axios.fetch('/api/phonenumber', {
+                method: "POST",
+                mode: "cors",
+                headers: {}
+
+            });
             console.log('Phone number updated');
         } catch (error) {
             console.error('Error updating phone number', error);
@@ -56,3 +61,4 @@ export default function PhoneNumberPopOut() {
     );
 }
 
+export default PhoneNumberPopOut;

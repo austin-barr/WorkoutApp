@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 // import "../SettingsPage/SettingsPage.module.css";
-import './ConfirmPopOut.module.css'
-export default function ConfirmPopOut() {
+import confirm from './ConfirmPopOut.module.css'
+const ConfirmPopOut = async (props) => {
     const [showModal, setShowModal] = useState(false);
 
     function handleDelete() {
         // Logic to delete the account goes here
         console.log('Account deleted');
         setShowModal(false);
+        props.setOnOpen(false)
+    }
+
+    const onShow = () => {
+        props.setOnOpen(true)
+        console.log('open')
     }
 
     return (
-            <div className = "body">
+            <div className = {confirm.body}>
             <Button className="btn btn-danger"  onClick={() => setShowModal(true)}>
                 Delete Account
             </Button>
+            
 
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
@@ -34,3 +41,5 @@ export default function ConfirmPopOut() {
         </div>
     );
 }
+
+export default ConfirmPopOut;

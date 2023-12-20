@@ -130,6 +130,6 @@
   padding: 1px;
 }
 
-.logListItem .selected {
-
+.logListItem.selected {
+  
 }

@@ -13,6 +13,10 @@
   height: 100vh;
   width: 100vw;
 }
+
+.body.delete {
+  background-image: url('../../static/angry.jpg');
+}
   .hide {
     display: none;
   }
