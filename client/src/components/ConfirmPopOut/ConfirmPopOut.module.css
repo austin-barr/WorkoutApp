@@ -1,0 +1,8 @@
+/* * {
+  border: solid red 1px;
+} */
+
+.body {
+  background-image: url("../../static/angry.jpg");
+  color: green;
+}

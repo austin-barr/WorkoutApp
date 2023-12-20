@@ -9,20 +9,21 @@ import SettingsPage from "./components/SettingsPage/SettingsPage";
 import ProgressPage from "./components/ProgressPage/ProgressPage";
 import WorkoutPage from "./components/WorkoutPage/WorkoutPage";
 import TempPage from './components/TempPage/TempPage';
+import ExercisePage from './components/ExercisePage/ExercisePage';
 
 // App.js
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{height: '100vh'}}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <ProtectedRoute path="/register" element={<SignUpPage />} />
-          <ProtectedRoute path="/home" element={<HomePage />} />
-          <ProtectedRoute path="/progress" element={<TempPage />} />
-          <ProtectedRoute path="/workouts" element={<TempPage />} />
-          <ProtectedRoute path="/suggest-workout" element={<TempPage />} />
-          <ProtectedRoute path="/settings" element={<TempPage />} />
+          <Route path="/register" element={<SignUpPage />} />
+          <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+          <Route path="/progress" element={<ProtectedRoute><ProgressPage /></ProtectedRoute>} />
+          <Route path="/workouts" element={<ProtectedRoute><WorkoutPage /></ProtectedRoute>} />
+          <Route path="/exercises" element={<ProtectedRoute><ExercisePage /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,0 +1,45 @@
+.deleteButton {
+    color: red;
+    background-color: inherit;
+    width: auto;
+    justify-content: right;
+    padding: 0;
+    cursor: pointer;
+    height: fit-content;
+    align-items: center;
+    border: 0;
+}
+
+.listItem {
+    /* user-select: none; */
+    padding: 8px;
+    margin-bottom: 8px;
+    background: #888;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.listItem:hover {
+    background: #666;
+    color: black;
+}
+
+.listItem.isDragging {
+    background: #666;
+    color: black;
+}
+
+.listItem.isClicked {
+    background: #444;
+    color: white;
+}
+
+.list{
+    overflow-y: scroll;
+    height: 44vh;
+}
+
+.listElementText {
+    flex-grow: 1;
+}

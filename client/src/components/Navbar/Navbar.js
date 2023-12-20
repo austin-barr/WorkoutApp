@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import navbar from "./Navbar.module.css";
-// import Container from "react-bootstrap/Container";
-// import Navbar from 'react-bootstrap/Navbar';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 
 function Navbar() {
   const handleSignOut = async () => {
@@ -16,8 +15,7 @@ function Navbar() {
         method: "POST",
         mode: "cors",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage["token"]}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(data),
       });
@@ -29,7 +27,7 @@ function Navbar() {
     catch (err) {
       console.log(err)
     }
-    localStorage.removeItem('token')
+
     window.location = "/";
   };
 
@@ -57,20 +55,24 @@ function Navbar() {
         My Workouts
       </Link>
       <Link
-        to="/suggest-workout"
-        className={navbar.navLink + (url === "/suggest-workout" ? " "+navbar.active : "")}
+        to="/exercises"
+        className={navbar.navLink + (url === "/exercises" ? " "+navbar.active : "")}
       >
-        Suggest a Workout
+         View Exercises
       </Link>
-      <Link
-        to="/settings"
-        className={navbar.navLink + (url === "/settings" ? " "+navbar.active : "")}
-      >
-        Settings
-      </Link>
-      <Link onClick={handleSignOut} className={navbar.navLink} id={navbar.signOut}>
-        Sign Out
-      </Link>
+      <DropdownButton title="Profile" className={navbar.dropdown} bsPrefix={navbar.navLink + (url === "/settings" ? " "+navbar.active : "")}>
+        <Link
+          to="/settings"
+          className={navbar.navLink}
+        >
+          Settings
+        </Link>
+        <Dropdown.Item as="button">Another action</Dropdown.Item>
+        <Dropdown.Item as="button">Something else</Dropdown.Item>
+        <Link onClick={handleSignOut} className={navbar.navLink} id={navbar.signOut}>
+          Sign Out
+        </Link>
+      </DropdownButton>
     </nav>
   );
 }

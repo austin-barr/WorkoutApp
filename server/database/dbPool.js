@@ -1,16 +1,18 @@
-const mysql = require('mysql2');
+const mariadb = require('mysql2');
+require('dotenv').config();
 
 try {
-  db = mysql.createPool({
-    host: '192.168.56.101',
-    user: 'webAppUser',
-    password: 'r0ckandst0ne',
-    database: 'WorkoutApp',
-    connectionLimit: 10
+  db = mariadb.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    connectionLimit: 10,
+    multipleStatements: true
   });
 }
 catch (err) {
-  console.log(err)
+  throw err
 }
 
 module.exports = db.promise();

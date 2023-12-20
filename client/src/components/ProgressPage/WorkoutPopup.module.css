@@ -1,0 +1,62 @@
+/* .modal {
+    overflow-y: hidden;
+    overflow-x: hidden;
+} */
+
+/* .modalContent {
+
+} */
+
+.draggableItem {
+    padding: 8px;
+    margin-bottom: 8px;
+    background: grey;
+    width: 100%;
+    display: flex;
+}
+  
+.draggableItem:hover {
+    background: lightgrey;
+}
+  
+.exerciseDetails {
+    flex-grow: 1;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 4%;
+    max-height: 100%;
+}
+
+.left {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+}
+
+.exerciseForm {
+    background-color: #eee;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px;
+    padding: 5px;
+    height: fit-content;
+}
+
+/* .list {
+    max-height: min-content;
+} */
+
+.right {
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.dates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 4%;
+}

@@ -4,13 +4,17 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
 export default function UpdateWeightPopup(props) {
+    const curDate = new Date().toLocaleDateString('fr-CA')
     const [show, setShow] = useState(false);
     const [weight, setWeight] = useState('');
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState(curDate);
     const [weightError, setWeightError] = useState('');
     const [dateError, setDateError] = useState('');
   
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+      setDate(curDate)
+      setShow(true);
+    }
     const handleClose = () => {
         setShow(false);
         setWeightError('');
@@ -36,8 +40,7 @@ export default function UpdateWeightPopup(props) {
             method: "POST",
             mode: "cors",
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage["token"]}`,
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data),
         });
@@ -50,6 +53,7 @@ export default function UpdateWeightPopup(props) {
 
         console.log('Weight:', weight);
         console.log('Date:', date);
+        props.onClick({weight: weight, date: date})
         handleClose();
       }
       catch (err) {
@@ -75,7 +79,7 @@ export default function UpdateWeightPopup(props) {
     
     return (
       <>
-        <Button variant="primary" onClick={handleShow}>
+        <Button variant="primary" onClick={handleShow} className={props.className}>
           Update Weight
         </Button>
   
@@ -97,7 +101,9 @@ export default function UpdateWeightPopup(props) {
                   }}
                   autoFocus
                 />
-                {weightError && <small className="text-danger">{weightError}</small>}
+                <div className="form-error-container">
+                  <small className="text-danger form-error-message">{weightError}</small>
+                </div>
               </Form.Group>
               <Form.Group className="mb-3" controlId="formDate">
                 <Form.Label>Select Date</Form.Label>
@@ -109,7 +115,9 @@ export default function UpdateWeightPopup(props) {
                     setDateError('');
                   }}
                 />
-                {dateError && <small className="text-danger">{dateError}</small>}
+                <div className="form-error-container">
+                  <small className="text-danger form-error-message">{dateError}</small>
+                </div>
               </Form.Group>
             </Form>
           </Modal.Body>

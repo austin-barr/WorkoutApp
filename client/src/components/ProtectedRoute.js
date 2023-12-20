@@ -1,19 +1,39 @@
-import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
-
-
-const checkAuth = async () => {
-    const response = await fetch("/api/check_auth");
-    if (response.isAuthenticated === true) {
-        return true;
-    }
-  };
-
+import React, { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children }) => {
-    const isAuthenticated = checkAuth(); // Implement checkAuth to verify authentication
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authCheckComplete, setAuthCheckComplete] = useState(false);
 
-    return isAuthenticated ? children : <Navigate to="/login" />;
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/check_auth", {
+          method: "GET",
+          mode: "cors"
+        });
+
+        console.log(response);
+        console.log(response.ok);
+
+        if (response.ok) {
+          setIsAuthenticated(true);
+        }
+      } catch (err) {
+        throw err;
+      } finally {
+        setAuthCheckComplete(true);
+      }
+    };
+
+    checkAuth();
+  }, [isAuthenticated]);
+
+  if (!authCheckComplete) {
+    return null;
+  }
+
+  return isAuthenticated ? children : <Navigate to="/" />;
 };
 
-export default Route;
+export default ProtectedRoute;

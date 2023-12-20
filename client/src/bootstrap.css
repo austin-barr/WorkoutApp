@@ -2114,12 +2114,31 @@ progress {
 }
 
 .form-container {
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
   border-radius: 8px;
   margin: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 60vw;
   max-width: 480px;
+}
+
+.body {
+
+}
+
+.form-group {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.form-error-container {
+  position: relative;
+  height: 1em;
+}
+
+.form-error-message {
+  position:absolute;
 }
 
 .form-control {
@@ -2140,13 +2159,18 @@ progress {
 
   padding: 8px;
   margin-top: 4px;
-  margin-bottom: 12px;
+  margin-bottom: 2px;
   border: 1px solid #aaa;
   border-radius: 4px;
   box-sizing: border-box;
   width: 100%;
   max-width: 500px;
 }
+
+.form-control[type=button]:hover {
+  /* try to fix button stuff? */
+}
+
 @media (prefers-reduced-motion: reduce) {
   .form-control {
     transition: none;

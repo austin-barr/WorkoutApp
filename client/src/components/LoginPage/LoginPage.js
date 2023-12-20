@@ -27,7 +27,7 @@ function LoginPage() {
         method: "POST",
         mode: "cors",
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       })
@@ -42,8 +42,7 @@ function LoginPage() {
 
       const responseData = await response.json();
       console.log(responseData.token);
-
-      localStorage["token"] = responseData.token
+      //localStorage["token"] = responseData.token
 
       window.location = "/home"
 
@@ -69,10 +68,31 @@ function LoginPage() {
       return isValid
     }
 
+  const handleTestClick = async (event) => {
+    event.preventDefault();
+    try {
+      const result = await fetch('api/test', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({n: 1})
+      })
+
+      const resultData = await result.json();
+      console.log(resultData)
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <div className={"id-flex justify-content-center align-items-center " + login.body} >
-      <form className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
+      <form className="form-container">
         <h1>Big Fellas</h1>
+        {/* <button onClick={(event) => handleTestClick(event)}>Test</button> */}
         <div className="p-4">
           <div className="form-group">
             <label class = "text-primary">Username:</label>
@@ -82,7 +102,9 @@ function LoginPage() {
                 setUsernameError('');
               }}
             />
-            {usernameError && <small className="text-danger">{usernameError}</small>}
+            <div className="form-error-container">
+              <small className="text-danger form-error-message">{usernameError}</small>
+            </div>
           </div>
           <div className="form-group">
             <label class = "text-primary">Password:</label>
@@ -92,9 +114,11 @@ function LoginPage() {
                     setPasswordError('');
                   }}
             />
-            {passwordError && <small className="text-danger">{passwordError}</small>}
+            <div className="form-error-container">
+              <small className="text-danger form-error-message">{passwordError}</small>
+            </div>
           </div>
-          <button onClick={handleSubmit} type="submit" className="btn btn-primary">Login</button>
+          <button onClick={handleSubmit} type="submit" className="btn btn-primary form-control">Login</button>
           <div style={{ marginTop: '10px' }}>
             <Link to="/register">New user? Click here</Link>
           </div>

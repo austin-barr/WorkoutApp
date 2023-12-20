@@ -11,6 +11,7 @@ function SignUpPage() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [birthDate, setBirthday] = useState('');
   const [email, setEmail] = useState('');
+  const [weight, setWeight] = useState('');
   const [image, setImage] = useState(null)
   const [isMounted, setIsMounted] = useState(true);
 
@@ -20,6 +21,9 @@ function SignUpPage() {
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [birthDateError, setBirthDateError] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [weightError, setWeightError] = useState('');
+
+  const curDate = new Date().toLocaleDateString('fr-CA')
 
   useEffect(() => {
     setIsMounted(true);
@@ -40,12 +44,15 @@ function SignUpPage() {
     console.log('past return')
 
     const textData = {
-      "username": username,
-      "password": password,
-      "confirm": confirm,
-      "email": email,
-      "phoneNumber": phoneNumber,
-      "birthDate": birthDate
+      userData: {
+        "username": username,
+        "password": password,
+        "email": email,
+        "phoneNumber": phoneNumber,
+        "birthDate": birthDate,
+        "curWeight": weight,
+        "curDate": curDate
+      }
     };
 
     let userId;
@@ -72,7 +79,7 @@ function SignUpPage() {
       console.log("UserID:", userId);
 
       console.log("signup successful")
-      alert("Sign up successful, redirecting to login...")
+      alert("Sign up successful; return to log in")
 
       window.location = '/'
   
@@ -94,6 +101,9 @@ function SignUpPage() {
         const response = await fetch("/api/upload/user", {
           method: "POST",
           mode: "cors",
+          headers: {
+            'Content-Type': 'application/json'
+          },
           body: formData
         })
 
@@ -165,6 +175,12 @@ function SignUpPage() {
       isValid = false;
     }
 
+    //weight
+    if (!weight.trim()) {
+      setWeightError('Weight is required')
+      isValid = false;
+    }
+
     return isValid
   }
 
@@ -192,7 +208,7 @@ function SignUpPage() {
 
   return (
     <div className={"d-flex justify-content-center align-items-center " + signup.body}>
-      <form onSubmit={handleSubmit} className="form-container" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px' }}>
+      <form onSubmit={handleSubmit} className="form-container">
         <h1>Big Fellas</h1>
         <div className="p-4">
           <div className="form-group">
@@ -207,7 +223,9 @@ function SignUpPage() {
                 setUsernameError('');
               }}
             />
-            {usernameError && <small className="text-danger">{usernameError}</small>}
+            <div className="form-error-container">
+              <small className="text-danger form-error-message">{usernameError}</small>
+            </div>
           </div>
           <div className="form-group">
             <label className="text-primary">Password:</label>
@@ -221,7 +239,9 @@ function SignUpPage() {
                 setPasswordError('');
               }}
             />
-            {passwordError && <small className="text-danger">{passwordError}</small>}
+            <div className="form-error-container">
+              <small className="text-danger form-error-message">{passwordError}</small>
+            </div>
           </div>
           <div className="form-group">
             <label className="text-primary">Confirm Password:</label>
@@ -235,7 +255,9 @@ function SignUpPage() {
                 setConfirmError('');
               }}
             />
-            {confirmError && <small className="text-danger">{confirmError}</small>}
+            <div className="form-error-container">
+              <small className="text-danger form-error-message">{confirmError}</small>
+            </div>
           </div>
           <div className="form-group">
             <label className="text-primary">Email:</label>
@@ -249,14 +271,14 @@ function SignUpPage() {
                 setEmailError('');
               }}
             />
-            {emailError && <small className="text-danger">{emailError}</small>}
+            <div className="form-error-container">
+              <small className="text-danger form-error-message">{emailError}</small>
+            </div>
           </div>
-            <label className="text-primary">Phone Number:</label>
-            {/* id needed?? */}
           <div className="form-group">
+            <label className="text-primary">Phone Number:</label>
             <PhoneInput
                 inputClass="form-control"
-                containerClass="form-group"
                 classname="form-control"
                 id="PhoneNumber"
                 onChange={(value) => {
@@ -264,7 +286,9 @@ function SignUpPage() {
                 setPhoneNumberError('');
               }}
             />
-            {phoneNumberError && <small className="text-danger">{phoneNumberError}</small>}
+            <div className="form-error-container">
+              <small className="text-danger form-error-message">{phoneNumberError}</small>
+            </div>
           </div>
           <div className="form-group">
             <label className="text-primary">Birthday:</label>
@@ -278,10 +302,28 @@ function SignUpPage() {
                 setBirthDateError('');
               }}
             />
-            {birthDateError && <small className="text-danger">{birthDateError}</small>}
+            <div className="form-error-container">
+              <small className="text-danger form-error-message">{birthDateError}</small>
+            </div>
           </div>
           <div className="form-group">
-            <label className="-webkit-file-upload-button">Profile Image</label>
+            <label className="text-primary">Current Weight:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="weight"
+              value={weight}
+              onChange={(event) => {
+                setWeight(event.target.value.replace(/[^0-9]/g, ''));
+                setWeightError('');
+              }}
+            />
+            <div className="form-error-container">
+            <small className="text-danger form-error-message">{weightError}</small>
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="text-primary">Profile Image</label>
             <ImageUpload className="form-control" id="image"
               onUpload={(image) => {
                 setImage(image);
