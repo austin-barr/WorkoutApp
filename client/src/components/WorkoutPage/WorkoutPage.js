@@ -6,23 +6,15 @@ import ScrollableButtonList from "./ScrollableButtonList.js";
 import Button from "react-bootstrap/Button";
 // import Modal from "react-bootstrap/Modal";
 // import ModalTest from "../modal/modalTest.js";
-import ScrollableList from '../ScrollableList/ScrollableList'
+import SelectableList from '../SelectableList/SelectableList'
 import workout from './WorkoutPage.module.css'
 import WorkoutPopup from "../ProgressPage/WorkoutPopup.js";
-
-const buttonData = [
-  "Button 1",
-  "Button 2",
-  "Button 3",
-  "Button 4",
-  "Button 5",
-  "Button 6",
-  "Button 7",
-];
+import WorkoutDetailsDisplay from "../WorkoutDetailsDisplay/WorkoutDetailsDisplay.js";
 
 const MyWorkouts = () => {
     const [workoutList, setWorkoutList] = useState([])
-    const [selectedWorkout, setSelectedWorkout] = useState()
+    const [clicked, setClicked] = useState()
+    const [changeToReload, setChangeToReload] = useState(false)
 
     const getWorkouts = async () => {
       console.log('get called')
@@ -49,11 +41,14 @@ const MyWorkouts = () => {
     useEffect(() => {
       console.log('use effect')
       getWorkouts()
-    }, [])
+    }, [changeToReload])
     
     const makeElement = (wo) => {
       return (
-        <div className={"btn btn-primary form-control " + workout.workoutListItem}>
+        <div className={"form-control " +
+          workout.workoutListItem + " " +
+          (clicked !== undefined && workoutList[clicked].id === wo.id ? workout.selected : "")}
+        >
           {wo.name}
         </div>
       )
@@ -67,21 +62,18 @@ const MyWorkouts = () => {
       console.log('unselect')
     }
 
-  const [modalShow, setModalShow] = React.useState(false);
-  const [clicked, setClicked] = useState()
-
   const onSave = () => {
-
+    setChangeToReload(!changeToReload)
   }
 
   return (
     <div className={workout.body}>
       <Navbar />
-      <form className={workout.container + " form-container"}>
+      <form className={workout.leftContainer + " form-container"}>
         <h2>My Workouts</h2>
         <div className={workout.listContainer}>
           {workoutList[0] ?
-            <ScrollableList
+            <SelectableList
               items={workoutList}
               makeListElement={makeElement}
               clickedIndex={clicked}
@@ -94,26 +86,34 @@ const MyWorkouts = () => {
           } 
         </div>
         <div className={workout.addContainer}>
-          {selectedWorkout ? 
-            <WorkoutPopup
-              className="btn btn-primary form-control"
-              title="Add New Workout"
-              buttonText="Add Workout"
-              mode={"add"}
-              workout={{}}
-              onSave={onSave}
-            />
-          :
-            <WorkoutPopup
-              className="btn btn-primary form-control"
-              title="Add New Workout"
-              buttonText="Add Workout"
-              mode={"add"}
-              workout={{}}
-              onSave={onSave}
-            />
-          }
+          <WorkoutPopup
+            className="btn btn-primary form-control"
+            title="New Workout"
+            buttonText="Create New Workout"
+            mode={"add"}
+            workout={{}}
+            onSave={onSave}
+          />
         </div>
+      </form>
+      <form className={workout.rightContainer + " form-container"}>
+        {clicked !== undefined ? 
+        <>
+          <div className={workout.details}>
+            <WorkoutDetailsDisplay workout={workoutList[clicked]} />
+          </div>
+          <WorkoutPopup
+            className="btn btn-primary form-control"
+            title={"Edit " + workoutList[clicked].name}
+            buttonText={"Edit " + workoutList[clicked].name}
+            mode={"edit"}
+            workout={workoutList[clicked]}
+            onSave={onSave}
+          />
+        </>
+        :
+          "Nothing clicked"
+        }
       </form>
     </div>
   );

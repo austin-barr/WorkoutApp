@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 // import "../SettingsPage/SettingsPage.module.css";
 import confirm from './ConfirmPopOut.module.css'
-const ConfirmPopOut = async (props) => {
+const ConfirmPopOut = (props) => {
     const [showModal, setShowModal] = useState(false);
 
     function handleDelete() {
@@ -13,24 +13,29 @@ const ConfirmPopOut = async (props) => {
     }
 
     const onShow = () => {
-        props.setOnOpen(true)
-        console.log('open')
+        setShowModal(true)
+        props.setIsOpen(true)
+    }
+
+    const onClose = () => {
+        setShowModal(false)
+        props.setIsOpen(false)
     }
 
     return (
-            <div className = {confirm.body}>
-            <Button className="btn btn-danger"  onClick={() => setShowModal(true)}>
+            <>
+            <Button className="btn btn-danger "  onClick={() => onShow()}>
                 Delete Account
             </Button>
             
 
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal show={showModal} onHide={() => onClose()}>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirm Delete</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>Are you sure you want to delete this account?</Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                    <Button variant="secondary" onClick={() => onClose()}>
                         Cancel
                     </Button>
                     <Button className="btn btn-danger" onClick={handleDelete}>
@@ -38,7 +43,7 @@ const ConfirmPopOut = async (props) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-        </div>
+        </>
     );
 }
 

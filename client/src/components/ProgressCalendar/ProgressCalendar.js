@@ -4,38 +4,61 @@ import cal from './ProgressCalendar.module.css'
 import { subMonths, addMonths } from 'date-fns'
 import { Button } from 'react-bootstrap';
 import WorkoutPopup from "../ProgressPage/WorkoutPopup";
-import ScrollableList from '../ScrollableList/ScrollableList';
+import SelectableList from '../SelectableList/SelectableList';
+import WorkoutDetailsDisplay from '../WorkoutDetailsDisplay/WorkoutDetailsDisplay';
+import { toLocalDate } from '../../utils'
 
 const Calendar = () => {
   const today = new Date()
   const todayString = today.toLocaleDateString('fr-CA')
   const [currentDate, setCurrentDate] = useState(today);  //currently displayed on calendar
   const [selectedDate, setSelectedDate] = useState(todayString);
-  const getDaysInMonth = (month, year) => {
-    var date = new Date(year, month, 1);
-    var days = [];
-    while (date.getMonth() === month) {
-      days.push(new Date(date).toLocaleDateString('fr-CA'));
-      date.setDate(date.getDate() + 1);
-    }
-    return days;
+  const getPrevMonthDays = (month, year) => {
+    const firstDayOfMonth = new Date(year, month, 1);
+    const startingDayOfWeek = firstDayOfMonth.getDay();
+    const lastMonth = month === 0 ? 11 : month - 1;
+    const lastMonthYear = month === 0 ? year - 1 : year;
+    const lastMonthDays = new Date(lastMonthYear, lastMonth + 1, 0).getDate();
+    const daysFromPreviousMonth = startingDayOfWeek === 0 ? 0 : startingDayOfWeek;
+  
+    const previousMonthDays = Array.from({ length: daysFromPreviousMonth }, (_, index) =>
+      new Date(lastMonthYear, lastMonth, lastMonthDays - daysFromPreviousMonth + index + 1).toLocaleDateString('fr-CA')
+    );
+    
+    return previousMonthDays;
+  };
+  const getNextMonthDays = (month, year) => {
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    const lastDayOfWeek = lastDayOfMonth.getDay();
+  
+    const daysToEndOfWeek = lastDayOfWeek === 6 ? 0 : 6 - lastDayOfWeek;
+  
+    const nextMonthDays = Array.from({ length: daysToEndOfWeek }, (_, index) =>
+      new Date(year, month + 1, index + 1).toLocaleDateString('fr-CA')
+    );
+    console.log(nextMonthDays)
+    return nextMonthDays;
+  };
+  const getCurMonthDays = (month, year) => {
+    const currentMonthDays = Array.from({ length: new Date(year, month + 1, 0).getDate() }, (_, index) =>
+      new Date(year, month, index + 1).toLocaleDateString('fr-CA')
+    );
+    return currentMonthDays
   }
-  const [daysList, setDaysList] = useState(getDaysInMonth(today.getMonth(), today.getFullYear()))
+  const [curDaysList, setCurDaysList] = useState(getCurMonthDays(today.getMonth(), today.getFullYear()))
+  const [prevDaysList, setPrevDaysList] = useState(getPrevMonthDays(today.getMonth(), today.getFullYear()))
+  const [nextDaysList, setNextDaysList] = useState(getNextMonthDays(today.getMonth(), today.getFullYear()))
   const [logs, setLogs] = useState({})
   const [clickedLogIndex, setClickedLogIndex] = useState()
   const [selectedLog, setSelectedLog] = useState()
   const [changeToReload, setChangeToReload] = useState(true)
-
-
-  const getFirstAndLast = (month, year) => {
-    const firstDay = new Date(year, month - 1, 1).toLocaleDateString('fr-CA')
-    const lastDay = new Date(year, month, 0).toLocaleDateString('fr-CA')
-
-    return [firstDay, lastDay];
-  }
+  const userTimeZone = new Date().toLocaleTimeString([], { timeZoneName: 'short' }).split(' ')[2];
 
   const loadWorkouts = async () => {
-    const [first, last] = getFirstAndLast(today.getMonth()+1, today.getFullYear())
+    const allDays = [...prevDaysList, ...curDaysList, ...nextDaysList]
+    console.log(allDays)
+    const [first, last] = [allDays[0], allDays[allDays.length-1]]
+    console.log(first, last)
     const dates = {
       startDate: first,
       endDate: last
@@ -52,8 +75,6 @@ const Calendar = () => {
 
       const logsResult = (await logsResponse.json()).logs
       
-      console.log('before sort')
-      console.log(logsResult)
       logsResult.sort((a, b) => {
         const aStart = new Date(`${a.date} ${a.startTime}`)
         const bStart = new Date(`${b.date} ${b.startTime}`)
@@ -64,8 +85,6 @@ const Calendar = () => {
           return 1
         }
       })
-      console.log('after sort')
-      console.log(logsResult)
       const logs = {}
       const seen = []
       for (let log of logsResult) {
@@ -103,17 +122,17 @@ const Calendar = () => {
   }, [changeToReload])
 
   const renderDays = () => {
-    return daysList.map((date, index) => (
+    const prevDays = prevDaysList.map((date, index) => (
       <div
         data-value={date}
-        className={cal.day + " "+
+        className={cal.day + " "+ cal.diffMonthDay +
           (date === todayString ? cal.dayToday : "") + " " +
           (date === selectedDate ? cal.daySelected : "")
         }
-        onClick={() => handleDayClick(date)}
+        onClick={() => prevMonth(date)}
       >
         <div className={cal.dayNumber}>
-          {index+1}
+          {parseInt(date.split('-')[2])}
         </div>
         <div className={cal.dayLogList}>
           {logs[date] && 
@@ -131,18 +150,75 @@ const Calendar = () => {
         </div>
       </div>
     ))
+    const curDays = curDaysList.map((date, index) => (
+      <div
+        data-value={date}
+        className={cal.day + " "+
+          (date === todayString ? cal.dayToday : "") + " " +
+          (date === selectedDate ? cal.daySelected : "")
+        }
+        onClick={() => handleDayClick(date)}
+      >
+        <div className={cal.dayNumber}>
+          {parseInt(date.split('-')[2])}
+        </div>
+        <div className={cal.dayLogList}>
+          {logs[date] && 
+            logs[date].map((log) => (
+              <div>
+                <div className={cal.logName}>
+                  {log.name}
+                </div>
+                <div className={cal.times}>
+                  {log.startTime} - {log.endTime}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    ))
+    const nextDays = nextDaysList.map((date, index) => (
+      <div
+        data-value={date}
+        className={cal.day + " "+ cal.diffMonthDay +
+          (date === todayString ? cal.dayToday : "") + " " +
+          (date === selectedDate ? cal.daySelected : "")
+        }
+        onClick={() => nextMonth(date)}
+      >
+        <div className={cal.dayNumber}>
+          {parseInt(date.split('-')[2])}
+        </div>
+        <div className={cal.dayLogList}>
+          {logs[date] && 
+            logs[date].map((log) => (
+              <div>
+                <div className={cal.logName}>
+                  {log.name}
+                </div>
+                <div className={cal.times}>
+                  {log.startTime} - {log.endTime}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    ))
+    return [...prevDays, ...curDays, ...nextDays]
   }
 
   const renderLogDetails = () => {
     console.log('selected')
-    console.log(selectedLog)
+    console.log(selectedDate)
     return (
       <div className={cal.logDetails}>
         <h2 className={cal.sidePanelHeader}>
-          {selectedDate}
+          {toLocalDate(selectedDate)}
         </h2>
         {logs[selectedDate] && 
-          <ScrollableList
+          <SelectableList
             items={logs[selectedDate]}
             makeListElement={makeLogListElement}
             clickedIndex={clickedLogIndex}
@@ -154,11 +230,8 @@ const Calendar = () => {
         }
         {selectedLog ?
           <div>
-            {selectedLog.name}
+            <WorkoutDetailsDisplay workout={selectedLog} mode="log"/>
           </div>
-          // workout summary (total time, muscles used)
-          // exercise list
-
         :
           "No logs"
           
@@ -199,18 +272,26 @@ const Calendar = () => {
     
   }
 
-  const nextMonth = () => {
+  const nextMonth = (clickedDate) => {
     const newDate = addMonths(currentDate, 1)
+    console.log(newDate)
     setCurrentDate(newDate)
-    setDaysList(getDaysInMonth(newDate.getMonth(), newDate.getFullYear()))
-    setSelectedDate()
+    setCurDaysList(getCurMonthDays(newDate.getMonth(), newDate.getFullYear()))
+    setPrevDaysList(getPrevMonthDays(newDate.getMonth(), newDate.getFullYear()))
+    setNextDaysList(getNextMonthDays(newDate.getMonth(), newDate.getFullYear()))
+    setSelectedDate(clickedDate ? clickedDate : undefined)
+    setSelectedLog()
   };
 
-  const prevMonth = () => {
+  const prevMonth = (clickedDate) => {
     const newDate = subMonths(currentDate, 1)
+    console.log(newDate)
     setCurrentDate(newDate)
-    setDaysList(getDaysInMonth(newDate.getMonth(), newDate.getFullYear()))
-    setSelectedDate()
+    setCurDaysList(getCurMonthDays(newDate.getMonth(), newDate.getFullYear()))
+    setPrevDaysList(getPrevMonthDays(newDate.getMonth(), newDate.getFullYear()))
+    setNextDaysList(getNextMonthDays(newDate.getMonth(), newDate.getFullYear()))
+    setSelectedDate(clickedDate ? clickedDate : undefined)
+    setSelectedLog()
   };
 
   return (
@@ -225,7 +306,7 @@ const Calendar = () => {
           {renderDays()}
         </div>
       </div>
-      <div className={cal.sidePanel}>
+      <div className={"form-container "}>
         {selectedDate ? 
           renderLogDetails()
         :

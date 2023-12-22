@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../Navbar/Navbar.js";
-import ScrollableList from '../ScrollableList/ScrollableList'
+import SelectableList from '../SelectableList/SelectableList'
 import exercise from './ExercisePage.module.css'
-
-const buttonData = [
-  "Button 1",
-  "Button 2",
-  "Button 3",
-  "Button 4",
-  "Button 5",
-  "Button 6",
-  "Button 7",
-];
 
 const ExercisePage = () => {
   const [exerciseList, setExerciseList] = useState([])
@@ -47,7 +37,7 @@ const ExercisePage = () => {
   const makeElement = (ex) => {
     return (
       <div
-        className={"btn form-control " +
+        className={"form-control " +
           exercise.exerciseListItem + " " +
           ((clicked !== undefined && ex.id == exerciseList[clicked].id) ? exercise.selected : "")
         }
@@ -81,7 +71,7 @@ const ExercisePage = () => {
         <h2>Exercises</h2>
         <div className={exercise.listContainer}>
           {exerciseList[0] ?
-            <ScrollableList
+            <SelectableList
               items={exerciseList}
               makeListElement={makeElement}
               clickedIndex={clicked}

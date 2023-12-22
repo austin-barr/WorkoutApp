@@ -6,12 +6,13 @@ import WeightGraph from "../WeightGraph/WeightGraph";
 import DurationGraph from "../DurationGraph/DurationGraph";
 import UpdateWeightPopup from "../UpdateWeightPopup/UpdateWeightPopup";
 import home from './HomePage.module.css'
+import WorkoutPopup from "../ProgressPage/WorkoutPopup";
 
 function HomePage() {
   const [weight, setWeight] = useState('');
   const [weightInput, setWeightInput] = useState({})
   const [duration, setDuration] = useState('');
-  const [durationInput, setDurationInput] = useState({})
+  const [reloadDuration, setReloadDuration] = useState(false)
   const curDate = new Date().toLocaleDateString('fr-CA')
 
   const getWeight = async () => {
@@ -95,10 +96,8 @@ function HomePage() {
       }
     };
 
-  const handleLog = (event) => {
-    event.preventDefault()
-
-    console.log("workout pressed");
+  const handleLog = () => {
+    setReloadDuration(!reloadDuration)
   };
 
   const formatDate = (date) => {
@@ -148,21 +147,20 @@ function HomePage() {
                   onClick={(formData) => {
                     handleUpdateWeight(formData)
                   }}
-                  className={"btn btn-primary form-control " + home.tableItem}
+                  className={"btn btn-primary form-control "}
                 />
               </div>
               <label className="text-primary">Duration:</label>
               <p className="text-primary" id="duration">{duration ? duration : "loading"}</p>
               <div>
-                <button 
-                  onClick={(event) => {
-                    handleLog(event)
-                  }}
-                  id="workout-button"
-                  className={"btn btn-primary form-control " + home.tableItem}
-                >
-                  Log a Workout
-                </button>
+              <WorkoutPopup
+                className="btn btn-primary form-control"
+                title={"Log a Workout"}
+                buttonText="Log Workout"
+                workout={{}}
+                mode={"log"}
+                onSave={handleLog}
+              />
               </div>
             </div>
             <h1 id="week-header">This week ({getWeek()}):</h1>
@@ -171,7 +169,7 @@ function HomePage() {
                 <WeightGraph weightInput={weightInput}/>
               </div>
               <div id="duration-graph-container">
-                <DurationGraph durationInput={durationInput}/>
+                <DurationGraph durationInput={reloadDuration}/>
               </div>
             </div>
           </div>

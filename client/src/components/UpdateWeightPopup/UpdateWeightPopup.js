@@ -23,7 +23,8 @@ export default function UpdateWeightPopup(props) {
         setDate('')
     }
   
-    const handleSaveChanges = async() => {
+    const handleSaveChanges = async(event) => {
+      event.preventDefault()
       console.log("save changes")
       const data = {
         "weight": weight,
@@ -88,7 +89,7 @@ export default function UpdateWeightPopup(props) {
             <Modal.Title>Update Weight</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form>
+            <Form onSubmit={(event) => (handleSaveChanges(event))}>
               <Form.Group className="mb-3" controlId="formWeight">
                 <Form.Label>Enter Your Weight:</Form.Label>
                 <Form.Control
@@ -96,7 +97,7 @@ export default function UpdateWeightPopup(props) {
                   placeholder="Enter weight in lbs"
                   value={weight}
                   onChange={(event) => {
-                    setWeight(event.target.value.replace(/\s/g, ''));
+                    setWeight(event.target.value.replace(/[^0-9]/g, ''));
                     setWeightError('');
                   }}
                   autoFocus

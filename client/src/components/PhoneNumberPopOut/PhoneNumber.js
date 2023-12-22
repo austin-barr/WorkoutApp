@@ -3,7 +3,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 // import "../SettingsPage/SettingsPage.module.css";
 
-const PhoneNumberPopOut = async (props)  => {
+const PhoneNumberPopOut = (props)  => {
     const [showModal, setShowModal] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
 
@@ -12,19 +12,29 @@ const PhoneNumberPopOut = async (props)  => {
     }
 
     const handleSubmit = async () => {
+        const data = {
+            PhoneNumber: phoneNumber
+          }
         try {
-            await axios.fetch('/api/phonenumber', {
+            const response = await fetch('/api/phonenumber', {
                 method: "POST",
                 mode: "cors",
-                headers: {}
-
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
             });
-            console.log('Phone number updated');
-        } catch (error) {
-            console.error('Error updating phone number', error);
-        }
+            if (!response.ok) {
+                console.error(`Error: ${response.statusText}`);
+                return;
+            }
         setShowModal(false);
     }
+        catch (err) {
+            console.log(err)
+          }
+    
+}
 
     return (
         <>

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const {verifyJwt} = require('./verifyJwt')
+const {verifyJwt} = require('./verification')
 
 
 router.get('/check_auth', verifyJwt, async (req, res) => {

@@ -49,6 +49,7 @@
 .right {
     display: grid;
     grid-template-rows: auto 1fr;
+    row-gap: 5px;
 }
 
 .hidden {
@@ -59,4 +60,9 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 4%;
+}
+
+.timeError {
+    width: 100%;
+    text-align: center;
 }

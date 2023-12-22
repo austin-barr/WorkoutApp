@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import DnDList from './DnDList';
 import popup from './WorkoutPopup.module.css'
 import { FormControl, FormGroup } from 'react-bootstrap';
+import { toLocalDate } from '../../utils';
 
 export default function WorkoutPopup(props) {
   const curDate = new Date().toLocaleDateString('fr-CA')
@@ -14,9 +15,8 @@ export default function WorkoutPopup(props) {
   const [editingExerciseIndex, setEditingExerciseIndex] = useState()
   const [workoutName, setWorkoutName] = useState('');
   const [date, setDate] = useState(props.defaultDate || curDate);
-  const [startTime, setStartTime] = useState();
-  const [endTime, setEndTime] = useState();
-  const [dateError, setDateError] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [selectedExercise, setSelectedExercise] = useState('');
   const [weight, setWeight] = useState('');
   const [sets, setSets] = useState('');
@@ -29,6 +29,8 @@ export default function WorkoutPopup(props) {
   const [weightError, setWeightError] = useState('');
   const [setsError, setSetsError] = useState('');
   const [repsError, setRepsError] = useState('');
+  const [dateError, setDateError] = useState('');
+  const [timeError, setTimesError] = useState('')
   const [title, setTitle] = useState('');
   
   const makeExerciseDnDElement = (exercise) => {
@@ -63,7 +65,17 @@ export default function WorkoutPopup(props) {
   const clearWorkoutInputs = () => {
     setWorkoutName('')
     setSelectedWorkoutIndex('')
+    setDate('')
+    setStartTime('')
+    setEndTime('')
   };
+
+  const clearWorkoutErrors = () => {
+    setWorkoutNameError('')
+    setSelectedExerciseError('')
+    setDateError('')
+    setTimesError('')
+  }
 
   const handleShow = () => {
     getExercises();
@@ -82,7 +94,7 @@ export default function WorkoutPopup(props) {
     clearExerciseInputs();
     clearExerciseErrors();
     clearWorkoutInputs();
-    setWorkoutNameError('');
+    clearWorkoutErrors()
     setAddedExerciseList([]);
   }
   
@@ -151,13 +163,11 @@ export default function WorkoutPopup(props) {
 
   const loadWorkout = (workout) => {
     console.log('set')
-    console.log(workout)
+    console.log(workout.name)
     if (workout) {
       setAddedExerciseList([...workout.exercises]);
       if (props.mode!=='add') {
         setWorkoutName(workout.name)
-        console.log('props')
-        console.log(props)
         if (props.workout.startTime) {
           console.log('time exists')
           setStartTime(to24Hour(props.workout.startTime))
@@ -223,11 +233,26 @@ export default function WorkoutPopup(props) {
         setWorkoutNameError('Workout name is required')
         isValid = false
     }
-    // if add check that workout doesn't already exist
-    // if edit no check since it uses the one that was passed into it
-    // if log names can be the same but could check if there is already a log for that time?
 
-    // if logging or editing a log the date and times and whatever need to be checked
+    if (props.mode==='log' || props.mode==='edit-log') {
+      console.log('date')
+      console.log(date)
+      if (new Date(toLocalDate(date)) > curDate) {
+        console.log('too high')
+      }
+
+      //times not empty
+      console.log('times')
+      console.log(startTime, endTime)
+      if (!startTime) {
+        setTimesError('Start Time required')
+        isValid = false
+      }
+      else if (!endTime) {
+        setTimesError('End Time required')
+        isValid = false
+      }
+    }
 
     return isValid
   }
@@ -240,22 +265,22 @@ export default function WorkoutPopup(props) {
         isValid = false
     }
 
-    if (!weight) {
+    if (!Number(weight)) {
         setWeightError('Weight is required')
         isValid = false
     }
 
-    if (!sets) {
+    if (!Number(sets)) {
         setSetsError('Sets is required')
         isValid = false
     }
 
-    if (!weight) {
+    if (!Number(reps)) {
         setRepsError('Reps is required')
         isValid = false
     }
 
-    return true
+    return isValid
   };
 
   const handleAddWorkout = async () => {
@@ -276,8 +301,8 @@ export default function WorkoutPopup(props) {
         ))
       ]
     };
-    console.log(addedExerciseList)
-    console.log(workout)
+    // console.log(addedExerciseList)
+    // console.log(workout)
 
     try {
       const response = await fetch('/api/add/workout', {
@@ -311,6 +336,7 @@ export default function WorkoutPopup(props) {
     }
     
     const workout = {
+      id: props.workout.id,
       name: workoutName,
       exercises: [addedExerciseList.map((ex, index) => (
           {
@@ -323,7 +349,7 @@ export default function WorkoutPopup(props) {
         ))
       ]
     };
-    console.log(addedExerciseList)
+    console.log('updated workout')
     console.log(workout)
 
     try {
@@ -448,7 +474,7 @@ export default function WorkoutPopup(props) {
 
   const handleSelectWorkout = (index) => {
     const workout = workoutList[index]
-    console.log(workout);
+    // console.log(workout);
     handleExerciseUnselected();
     loadWorkout(workout);
     setEditingExerciseIndex();
@@ -564,6 +590,7 @@ export default function WorkoutPopup(props) {
                       value={startTime}
                       onChange={(event) => {
                         setStartTime(event.target.value)
+                        setTimesError('')
                       }}
                     />
                     <Form.Control
@@ -571,11 +598,12 @@ export default function WorkoutPopup(props) {
                       value={endTime}
                       onChange={(event) => {
                         setEndTime(event.target.value)
+                        setTimesError('')
                       }}
                     />
                   </div>
                   <div className="form-error-container">
-                    <small className="text-danger form-error-message">{dateError}</small>
+                    <small className={"text-danger form-error-message " + popup.timeError}>{timeError}</small>
                   </div>
                 </Form.Group>
                 <div className={popup.exerciseForm}>
@@ -671,8 +699,6 @@ export default function WorkoutPopup(props) {
                   Save New Workout
                 </Button>
             }
-              
-              
           </Modal.Footer>
         </Modal>
       </>

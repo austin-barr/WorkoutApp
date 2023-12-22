@@ -1,8 +1,8 @@
 const express = require('express')
-const { getUsername, getUserImage, changeUserImage, getUserByUsername, removeSession, getSession, logWeight, getWeights, getDurations, getRecentWeight, getExercises, addWorkout, addLog, getWorkouts, updateWorkout, updateLog, getLogs, test } = require('./database/queries')
+const { getUsername, getUserImage, changeUserImage, getUserByUsername, removeSession, getMuscleGroups, addExercise, logWeight, getWeights, getDurations, getRecentWeight, getExercises, addWorkout, addLog, getWorkouts, updateWorkout, updateLog, getLogs, test, changePhonenumber, verifyLogin, changePassword, isAuthorized, isAdmin} = require('./database/queries')
 const router = express.Router();
 const multer = require('multer');
-const {verifyJwt} = require('./verifyJwt')
+const {verifyJwt, verifyUserAuthorized } = require('./verification')
 
 const storage = multer.diskStorage({
     destination: 'profileImages/',
@@ -20,7 +20,7 @@ router.post('/lookup/username',verifyJwt, async (req, res) => {
     console.log("result here")
     console.log(result)
     if (result) {
-        res.status(200).json({rows: result})
+        res.status(200).json({success: true})
     }
     else {
         res.json({"success":false})
@@ -38,6 +38,57 @@ router.post('/get/profilepic', verifyJwt, async (req, res) => {
         res.json({success: false})
     }
 });
+router.get('/get/isAuthorized', verifyJwt, async (req, res) => {
+    try {
+        const result = await isAuthorized(req.userId)
+        if (result !== undefined) {
+            res.status(200).json({result: result})
+        }
+        else {
+            res.status(500).json({error: "Internal server error"})
+        }
+    }
+
+    catch (err) {
+        res.status(500).json({error: "Internal server error"})
+    }
+    
+});
+
+router.get('/get/isAdmin', verifyJwt, async (req, res) => {
+    try {
+        const result = await isAdmin(req.userId)
+        if (result !== undefined) {
+            res.status(200).json({result: result})
+        }
+        else {
+            res.status(500).json({error: "Internal server error"})
+        }
+    }
+
+    catch (err) {
+        res.status(500).json({error: "Internal server error"})
+    }
+    
+});
+
+router.post('/phonenumber', verifyJwt, async (req, res) => {
+    try {
+        const result = await changePhonenumber(req.userId, req.body.PhoneNumber)
+        if (result) {
+            res.status(200)
+        }
+        else {
+            res.status(500).json({error: "Internal server error"})
+        }
+    }
+    catch (err) {
+        res.status(500).json({error: "Internal server error"})
+    }
+    
+});
+
+
 router.post('/upload/user', verifyJwt, upload.single('file'), async (req, res) => {
     try {
         const result = await changeUserImage(req.body.userId, req.file.filename)
@@ -65,6 +116,7 @@ router.post('/lookup/username', async (req, res) => {
         }
     }
     catch (err) {
+        console.log(err)
         res.status(500).json({error: "Internal server error"})
     }
 });
@@ -91,6 +143,7 @@ router.post('/log/weight', verifyJwt, async (req, res) => {
             res.status(200).json({result: result})
         }
         else {
+            console.log("inner result" + result);
             res.status(500).json({error: "Internal server error"})
         }
     }
@@ -98,7 +151,36 @@ router.post('/log/weight', verifyJwt, async (req, res) => {
         res.status(500).json({error: "Internal server error"})
     }
 });
+router.post('/changePassword', verifyJwt, async (req, res) => {
+    try {
+        console.log("usernamePasscheck");
+        console.log(req.body.password);
+        console.log(req.userId);
+        const userRes = await getUsername(req.userId)
+        console.log(userRes.username)
+        const userID = await verifyLogin(userRes.username, req.body.password);
+        console.log("passVerify");
+        console.log(userID)
+        if(userID !== undefined){
 
+            result = await changePassword(req.userId,  req.body.NewPassword)
+            if (result !== undefined) {
+                res.status(200).json({result: result})
+            }
+            else {
+                res.status(500).json({error: "Internal server error"})
+            }
+        }
+        else
+        {
+            res.status(401).json({error: "Incorrect Password"})
+
+        }
+    }
+    catch (err) {
+        res.status(500).json({error: "Internal server error"})
+    }
+});
 router.post('/get/weights', verifyJwt, async (req, res) => {
     const userId = req.userId
     const startDate = req.body.startDate
@@ -106,8 +188,9 @@ router.post('/get/weights', verifyJwt, async (req, res) => {
     try {
         const result = await getWeights(userId, startDate, endDate)
         const recentResult = await getRecentWeight(userId, startDate)
-        const prevWeight = recentResult.rows !== undefined ? [recentResult.rows[0].weight] : []
-        if (result) {
+        console.log(recentResult)
+        const prevWeight = (recentResult ? [recentResult[0].weight] : [])
+        if (result || recentResult) {
             res.status(200).json({rows: result, prevWeight: prevWeight})
         }
         else {
@@ -118,6 +201,7 @@ router.post('/get/weights', verifyJwt, async (req, res) => {
         res.status(500).json({error: "Internal server error"})
     }
 });
+
 
 router.post('/get/durations', verifyJwt, async (req, res) => {
     const userId = req.userId
@@ -154,18 +238,42 @@ router.post('/get/recent-weight', verifyJwt, async (req, res) => {
         res.status(500).json({error: "Internal server error"})
     }
 });
+router.post('/add/exercise', verifyJwt, verifyUserAuthorized, async (req, res) => {
+    const name = req.body.name;
+    const description = req.body.description;
+    const image = "./defaultImages/defaultExercise.png"
+    const duration = req.body.duration;
+    const muscleGroups = req.body.muscleGroups;
+
+    try {
+        const result = await addExercise(name, description, image, duration, muscleGroups)
+        if (result) {
+            res.status(200).json({rows: result})
+        }
+        else {
+            console.log('here')
+            res.status(500).json({error: "Internal server error"})
+        }
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({error: "Internal server error"})
+    }
+});
 
 router.get('/get/exercises', verifyJwt, async (req, res) => {
     try {
         rows = await getExercises()
+        // console.log(rows)
+        let i = -1
         if (rows) {
-            const min = Math.min(...rows.map((row) => row.id))
             let exercises = []
             let seen = []
             for (let row of rows) {
                 if (!(seen.includes(row.id))) {
+                    i++
                     seen.push(row.id)
-                    exercises[row.id-min] = {
+                    exercises[i] = {
                         id: row.id,
                         name: row.name,
                         description: row.description,
@@ -173,8 +281,9 @@ router.get('/get/exercises', verifyJwt, async (req, res) => {
                         muscleGroups: []
                     }
                 }
-                exercises[row.id-min].muscleGroups.push(row.muscle_group)
+                exercises[i].muscleGroups.push(row.muscle_group)
             }
+            // console.log(exercises)
             res.status(200).json({exercises: exercises})
         }
         else {
@@ -185,6 +294,25 @@ router.get('/get/exercises', verifyJwt, async (req, res) => {
         res.status(500).json({error: "Internal server error"})
     }
 });
+
+router.get('/get/muscleGroups', verifyJwt, async (req, res) => {
+    try {
+        const rows = await getMuscleGroups();
+        if (rows) {
+            res.status(200).json({rows: rows})
+        }
+        else {
+            res.status(500).json({error: "Internal server error"})
+        }
+    }
+    catch (err) {
+        res.status(500).json({error: "Internal server error"})
+    }
+})
+
+router.get('/get/users', verifyJwt, async (req, res) => {
+
+})
 
 router.get('/get/workouts', verifyJwt, async (req, res) => {
     const userId = req.userId
@@ -206,11 +334,13 @@ router.get('/get/workouts', verifyJwt, async (req, res) => {
                     i++;
                     seen.push(row.workout_id)
                     workouts[i] = {
+                        id: row.workout_id,
                         name: row.workout_name,
                         exercises: [],
-                        estimatedTime: row.estimated_time
+                        estimatedTime: 0
                     }
                 }
+                workouts[i].estimatedTime += Number(row.estimated_time)
                 workouts[i].exercises.push({
                     id: row.exercise_id,
                     name: row.exercise_name,
@@ -258,9 +388,12 @@ router.post('/get/logs', verifyJwt, async (req, res) => {
                         startTime: row.start_time,
                         endTime: row.end_time,
                         duration: row.duration,
-                        exercises: []
+                        exercises: [],
+                        estimatedTime: 0
                     }
                 }
+                logs[i].estimatedTime += Number(row.estimated_time)
+                console.log(logs)
                 logs[i].exercises.push({
                     id: row.exercise_id,
                     name: row.exercise_name,
@@ -380,7 +513,7 @@ router.post('/update/log', verifyJwt, async (req, res) => {
 
 router.post('/update/workout', verifyJwt, async (req, res) => {
     console.log('update workout')
-    console.log(req.body.exercises[0])
+    console.log(req.body.id)
     const userId = req.userId
     const workoutId = req.body.id
     const workoutName = req.body.name
