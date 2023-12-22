@@ -1,0 +1,11 @@
+.list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.listItem {
+    background-color: #bbb;
+    color: black;
+    padding: 5;
+    margin: 5px;
+}

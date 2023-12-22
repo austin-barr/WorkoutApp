@@ -7,30 +7,68 @@ export default function ChangePasswordPopOut() {
     const [showModal, setShowModal] = useState(false);
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
-
     const [newPassword, setNewPassword] = useState('');
+    
     const [confirmError, setConfirmError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [NewPassowrdError, setNewPasswordError] = useState('');
 
 
     const [confirmPassword, setConfirmPassword] = useState('');
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value.replace(/\s/g, ''));
+        setPasswordError('');
+    }
+    const handlePasswordConfirm = (event) => {
+        setNewPassword(event.target.value.replace(/\s/g, ''));
+        setConfirmError('');
+    }
+    const handleCurrentPasswordChange = (event) => {
+        setConfirm(event.target.value.replace(/\s/g, ''));
+        setConfirmError('');
+    }
+    const handleSignOut = async () => {
+        try {
+    
+          const data = {
+            "token": localStorage["token"]
+          };
+    
+          const response = await fetch("/api/signout", {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+          });
+    
+          if (!response.ok) {
+            console.error(`Error: ${response.statusText}`);
+          }
+        }
+        catch (err) {
+          console.log(err)
+        }
+    
+        window.location = "/";
+      };
 
     const validateInputs = () => {
         let isValid = true;
         
         if (!newPassword.trim()) {
-            NewPassowrdError('Password is required')
+            setNewPasswordError('Password is required')
             isValid = false;
           }
           else if (newPassword.trim().length < 8) {
-            NewPassowrdError('Password must be at least 8 characters')
+            setNewPasswordError('Password must be at least 8 characters')
             isValid = false;
           }
           // more password stuff here
       
-          if (confirm !== password) {
-            setConfirmError('Passwords must match')
+          if (confirm !== newPassword) {
+            setNewPasswordError('Passwords must match')
             isValid = false;
           }
           return isValid
@@ -45,7 +83,8 @@ export default function ChangePasswordPopOut() {
           }
           const textData = {
             "password": password,
-            "confirm": confirm,
+            "NewPassword": newPassword
+,
         }
         try {
             const response = await fetch("/api/changePassword", {
@@ -70,7 +109,7 @@ export default function ChangePasswordPopOut() {
           }
         
       
-        setShowModal(false);
+          handleSignOut();
     }
 
         
@@ -88,44 +127,35 @@ export default function ChangePasswordPopOut() {
                 <Modal.Body>
                     <Form.Group>
                         <Form.Label>Current Password</Form.Label>
-                        <input
+                        <Form.Control 
                         type="password"
                         className="form-control"
-                        id="password"
+                        id="current-password"
                         value={password}
-                        onChange={(event) => {
-                            setPassword(event.target.value.replace(/\s/g, ''));
-                            setPasswordError('');
-                        }}
+                        onChange={handlePasswordChange}
                         />
                         
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>New Password</Form.Label>
-                                <input
+                        <Form.Control
                                 type="password"
                                 className="form-control"
                                 id="password"
                                 value={newPassword}
-                                onChange={(event) => {
-                                    setNewPassword(event.target.value.replace(/\s/g, ''));
-                                    setNewPasswordError('');
-                                }}
+                                onChange={handlePasswordConfirm}
                                 />
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Confirm New Password</Form.Label>
-                        <input
+                        <Form.Control
                     type="password"
                     className="form-control"
                     id="confirm"
                     value={confirm}
-                    onChange={(event) => {
-                        setConfirm(event.target.value.replace(/\s/g, ''));
-                        setConfirmError('');
-                    }}
+                    onChange={handleCurrentPasswordChange}
                     />
-                                <div className="form-error-container">
+                    <div className="form-error-container">
                     <small className="text-danger form-error-message">{NewPassowrdError}</small>
                     </div>
                     </Form.Group>

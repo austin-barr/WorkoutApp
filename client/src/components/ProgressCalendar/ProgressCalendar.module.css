@@ -52,7 +52,7 @@
 .days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(5, 100px);
+  grid-template-rows: repeat(6, 80px);
   gap: 5px;
   user-select: none;
   height: 500px;
@@ -66,6 +66,10 @@
   cursor: pointer;
   display: grid;
   grid-template-rows: auto 1fr;
+}
+
+.diffMonthDay {
+  filter: opacity(0.3);
 }
 
 .dayNumber {

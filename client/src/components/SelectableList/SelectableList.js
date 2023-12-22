@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import list from './ScrollableList.module.css'
+import list from './SelectableList.module.css'
 
-export default function ScrollableList(props) {
+export default function SelectableList(props) {
 
     const handleItemClicked = (event, index) => {
       if (index != props.clickedIndex) {

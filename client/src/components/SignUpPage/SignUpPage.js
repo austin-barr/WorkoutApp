@@ -125,6 +125,7 @@ function SignUpPage() {
     console.log('validate called')
     let isValid = true;
     // username
+    console.log(isNameAvailable(username.trim()))
     if (!username.trim()) {
       setUsernameError('Username is required');
       isValid = false;
@@ -174,6 +175,9 @@ function SignUpPage() {
       setBirthDateError('Birth date is required');
       isValid = false;
     }
+    if (birthDate > curDate) {
+
+    }
 
     //weight
     if (!weight.trim()) {
@@ -194,7 +198,7 @@ function SignUpPage() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({"username": username})
+      body: JSON.stringify({username: username})
     }).then((response) => {
       console.log(response)
         if (response.ok) {
@@ -307,7 +311,7 @@ function SignUpPage() {
             </div>
           </div>
           <div className="form-group">
-            <label className="text-primary">Current Weight:</label>
+            <label className="text-primary">Current Weight (lbs):</label>
             <input
               type="text"
               className="form-control"

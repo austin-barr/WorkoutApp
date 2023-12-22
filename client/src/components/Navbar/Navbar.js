@@ -67,8 +67,7 @@ function Navbar() {
         >
           Settings
         </Link>
-        <Dropdown.Item as="button">Another action</Dropdown.Item>
-        <Dropdown.Item as="button">Something else</Dropdown.Item>
+       
         <Link onClick={handleSignOut} className={navbar.navLink} id={navbar.signOut}>
           Sign Out
         </Link>

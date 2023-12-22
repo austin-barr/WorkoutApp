@@ -24,7 +24,8 @@ export default function WeightGraph(props) {
                 endDate: end
             }
             try{
-                console.log('try)')
+                console.log('posting')
+                console.log(postData)
                 const response = await fetch('/api/get/weights', {
                     method: "POST",
                     mode: "cors",
@@ -51,6 +52,8 @@ export default function WeightGraph(props) {
                 }
 
                 let lastWeight = prevWeight
+                console.log('prev weight')
+                console.log(lastWeight)
                 let rowIndex = 0
                 let weights = []
                 
@@ -68,8 +71,8 @@ export default function WeightGraph(props) {
                 }
             
                 const yStep = 5
-                const graphMin = Math.floor((Math.min(...weights) - 1) / yStep) * yStep;
-                const graphMax = Math.ceil((Math.max(...weights) + 1) / yStep) * yStep;
+                const graphMin = Math.floor((Math.min(...(weights.map((w) => (isNaN(w) ? Infinity : w)))) - 1) / yStep) * yStep;
+                const graphMax = Math.ceil((Math.max(...(weights.map((w) => (isNaN(w) ? -Infinity : w)))) + 1) / yStep) * yStep;
             
                 setGraphData({
                 labels: DOTW,

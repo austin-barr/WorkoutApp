@@ -78,8 +78,37 @@ async function changeUserImage(userId, imagePth) {
   catch (err) {
     throw err
   }
-}
+};
+async function changePassword(userId, password) {
 
+  const hashedPassword = await bcrypt.hash(password, 10);
+  console.log(userId)
+  console.log(hashedPassword)
+  try {
+    const [rows] = await db.query(
+        'UPDATE user SET password=? WHERE id=?',
+        [hashedPassword, userId]
+    );
+
+    return rows
+  }
+  catch (err) {
+    throw err
+  }
+};
+async function changePhonenumber(userId, phoneNumber){
+  try {
+    const [rows] = await db.query(
+        'UPDATE user SET phone=? WHERE id=?',
+        [phoneNumber, userId]
+    );
+
+    return rows
+  }
+  catch (err) {
+    throw err
+  }
+};
 async function verifyLogin(username, password) {
   try {
     const [rows] = await db.query('SELECT id, password FROM user WHERE username = ?', [username]);
@@ -91,9 +120,11 @@ async function verifyLogin(username, password) {
       }
     }
   } catch (err) {
+    console.log(err)
     throw err
   }
 };
+
 
 async function getUserByUsername(username) {
   try {
@@ -122,6 +153,46 @@ async function getUsername(userID) {
     throw err
   }
 };
+async function isAuthorized(userID) {
+  try {
+    const [rows] = await db.query(
+      'SELECT is_authorized FROM user WHERE id=?',
+      [userID]
+    );
+    console.log("rows:")
+    console.log(rows)
+    console.log(typeof(rows[0].is_authorized))
+    const buffer = Buffer.from(rows[0].is_authorized)
+    const isAuthorized = buffer.readUIntLE(0,1)
+
+    return isAuthorized
+  }
+  catch (err) {
+    console.log(err)
+    throw err
+  }
+};
+
+async function isAdmin(userID) {
+  try {
+    const [rows] = await db.query(
+      'SELECT is_admin FROM user WHERE id=?',
+      [userID]
+    );
+    console.log("rows:")
+    console.log(rows)
+    console.log(typeof(rows[0].is_admin))
+    const buffer = Buffer.from(rows[0].is_admin)
+    const isAdmin = buffer.readUIntLE(0,1)
+
+    return isAdmin
+  }
+  catch (err) {
+    console.log(err)
+    throw err
+  }
+};
+
 async function getUserImage(userId) {
   console.log("break")
   console.log(userId)
@@ -170,12 +241,16 @@ async function logWeight(userId, date, weight) {
   }
 };
 
+
 async function getRecentWeight(userId, date) {
   try {
     const [rows] = await db.query(
       'CALL get_recent_weight(?, ?)',
       [userId, date]
     );
+    console.log('recent weight rows')
+    console.log(date)
+    console.log(rows[0])
     return rows[0]
   }
   catch (err) {
@@ -214,12 +289,26 @@ async function getExercises() {
     const [rows] = await db.query(
       'CALL get_exercises_with_muscles()'
     );
+    console.log(rows)
     return rows[0]
   }
   catch (err) {
     throw err
   }
 };
+
+async function getMuscleGroups() {
+  try {
+    const [rows] = await db.query(
+      'SELECT * FROM muscle_group'
+    );
+    return rows
+  }
+  catch (err) {
+    console.log(err)
+    throw err
+  }
+}
 
 async function getWorkouts(userId) {
   try {
@@ -285,7 +374,22 @@ async function updateWorkout(userId, workoutId, workoutName, exerciseList) {
     throw err
   }
 };
-
+async function addExercise(name, description, image, duration, muscleGroups) {
+  console.log('duration')
+  console.log(duration)
+  console.log(JSON.stringify(muscleGroups))
+  try {
+    const [rows] = await db.query(
+      'CALL add_exercise(?,?,?,?,?,@exercise_id); SELECT @exercise_id',
+      [name, description, image, duration, JSON.stringify(muscleGroups)]
+    );
+    console.log(rows)
+    return rows
+  }
+  catch (err) {
+    throw err
+  }
+};
 async function updateLog(userId, workoutId, workoutName, date, startTime, endTime, exerciseList) {
   try {
     const [rows] = await db.query(
@@ -337,4 +441,10 @@ module.exports = {
   addLog,
   updateLog,
   getLogs,
+  changePhonenumber,
+  changePassword,
+  isAuthorized,
+  isAdmin,
+  addExercise,
+  getMuscleGroups,
 };

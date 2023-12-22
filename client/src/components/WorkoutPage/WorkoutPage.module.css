@@ -12,10 +12,16 @@
   width: 100%;
 }
 
-.container {
+.leftContainer {
   height: 90%;
   display: grid;
-  grid-template-rows: auto 5fr 1fr;
+  grid-template-rows: auto 1fr auto;
+}
+
+.rightContainer {
+  height: 90%;
+  display: grid;
+  grid-template-rows: 1fr auto;
 }
 
 .listContainer {
@@ -23,7 +29,19 @@
 }
 
 .workoutListItem {
+  cursor: pointer;
   padding-left: 0;
+  text-align: center;
+  background-color: #444;
+  color: white;
+}
+
+.workoutListItem:hover {
+  background-color: #222;
+}
+
+.workoutListItem.selected {
+  background-color: #222;
 }
 
 .addContainer {

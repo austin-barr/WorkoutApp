@@ -8,6 +8,7 @@ router.post('/login', [
     check('username').notEmpty().isString().trim(),
     check('password').notEmpty().isString().trim(),
   ], async (req, res) => {
+    console.log('login hit')
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -28,7 +29,8 @@ router.post('/login', [
         }
     }
     catch (err) {
-        res.status(err.status).json({ message: err.message });
+        console.log(err)
+        res.status(500).json({ message: err.message });
     }
 });
 

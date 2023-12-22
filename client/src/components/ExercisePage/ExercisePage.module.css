@@ -29,9 +29,15 @@
 }
 
 .exerciseListItem {
+    cursor: pointer;
     padding-left: 0;
     background-color: #666;
     color: black;
+    text-align: center;
+}
+
+.exerciseListItem:hover {
+    background-color: #444;
 }
 
 .exerciseListItem.selected {
